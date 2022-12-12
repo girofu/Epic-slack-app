@@ -12,8 +12,8 @@
     "@slack/bolt": "^3.12.2",
     "@slack/rtm-api": "^6.0.0",
     "@slack/web-api": "^6.8.0",
+    "dotenv": "^16.0.3",
     "esm": "^3.2.25"
   },
-  "devDependencies": {},
   "description": ""
 }
