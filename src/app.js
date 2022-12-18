@@ -94,11 +94,11 @@ async function findConversation(name) {
                                 let speakUser = '';
                                 // save the @someone as userId 
                                 let n;
-                                console.log(messages.blocks[0].elements[0].elements);
-                                console.log(messages.blocks[0].elements[0].elements.length);
+                                // console.log(messages.blocks[0].elements[0].elements);
+                                // console.log(messages.blocks[0].elements[0].elements.length);
                                 
                                 for (n = 0; messages.blocks[0].elements[0].elements.length > n ; n += 1) {
-                                console.log(messages.blocks[0].elements[0].elements[n].user_id);
+                                // console.log(messages.blocks[0].elements[0].elements[n].user_id);
                                 userId = messages.blocks[0].elements[0].elements[n].user_id;
                                 speakUser = messages.user;
                                 
