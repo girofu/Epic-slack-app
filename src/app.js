@@ -32,7 +32,7 @@ const client = new WebClient( SLACK_BOT_TOKEN, {
 let userSelectedConversation = {};
 
 // what conversation you want to select
-var conversationSelected = ["謝謝", "感謝"];
+var wordFilter = ["謝謝", "感謝", " :肌肉: ", "感恩"];
 
 // Find conversation ID using the conversations.list method
 async function findConversation(name) {
@@ -40,14 +40,21 @@ async function findConversation(name) {
         // Call the conversations.list method using the built-in WebClient
         const conversationListResult = await app.client.conversations.list({
           // The token you used to initialize your app
-          token: SLACK_BOT_TOKEN
+          token: SLACK_BOT_TOKEN,
+          // set the channel amount search limit 
+          limit: 1000
         });
 
         var channelListId = [];
 
         for (const channel of conversationListResult.channels) {
-          channelListId.push(channel.id);
+            if (channel.is_member) {
+                channelListId.push(channel.id);
+                // console.log(channel.id);
+            }
         }
+        // console.log(conversationListResult);
+        console.log(channelListId);
     }
     catch (error) {
         console.error(error);
@@ -58,17 +65,23 @@ async function findConversation(name) {
         try {
             // Call the conversations.history method using WebClient
             const conversationHistoryResult = await client.conversations.history({
-                channel: channelId
+                channel: channelId,
+                inclusive: true,
+                // test timestamp here
+                latest: 1671251049,
+                limit: 50
             });
+            console.log(conversationHistoryResult);
 
             for (const messages of conversationHistoryResult.messages) {
                 
                 // retrieve text
                 var messagesText = messages.text;
-
+                let isConversationSelected = false;
                 // filter the conversation with positive compliment
-                for (var i = 0; i < conversationSelected.length; i += 1) {
-                    var isPositive = messagesText.includes(conversationSelected[i]);
+                for (var i = 0; i < wordFilter.length; i += 1) {
+                    if (!isConversationSelected) {
+                    var isPositive = messagesText.includes(wordFilter[i]);
                     if (isPositive) {
                         let patternResult;  
                         let pattern = /<@/;
@@ -80,8 +93,15 @@ async function findConversation(name) {
                                 let userId = '';
                                 let speakUser = '';
                                 // save the @someone as userId 
-                                userId = messages.blocks[0].elements[0].elements[0].user_id;
+                                let n;
+                                console.log(messages.blocks[0].elements[0].elements);
+                                console.log(messages.blocks[0].elements[0].elements.length);
+                                
+                                for (n = 0; messages.blocks[0].elements[0].elements.length > n ; n += 1) {
+                                console.log(messages.blocks[0].elements[0].elements[n].user_id);
+                                userId = messages.blocks[0].elements[0].elements[n].user_id;
                                 speakUser = messages.user;
+                                
 
                                 if (userId != speakUser) {
                                     if (userId != undefined) {
@@ -92,10 +112,13 @@ async function findConversation(name) {
                                             userSelectedConversation[userId] = [];
                                             userSelectedConversation[userId].push(messages.text);
                                         };
+                                        isConversationSelected = true;
                                     }
+                                }
                                 }
                             }
                         } 
+                    }
                     } 
                 } 
             }
