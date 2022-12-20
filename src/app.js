@@ -31,8 +31,15 @@ const client = new WebClient( SLACK_BOT_TOKEN, {
 // the object that save all the conversation
 let userSelectedConversation = {};
 
-// what conversation you want to select
-var wordFilter = ["謝謝", "感謝", " :肌肉: ", "感恩"];
+// what conversation you want to filter
+var wordFilter = ["謝謝", "感謝", " :肌肉: ", "感恩", "今天跟"];
+
+// what emoji you want to filter
+var emojiFilter = [];
+
+const retrieveingTime = new Date();
+const retrieveingTimeStamp = retrieveingTime.setDate();
+
 
 // Find conversation ID using the conversations.list method
 async function findConversation(name) {
@@ -55,12 +62,14 @@ async function findConversation(name) {
         }
         // console.log(conversationListResult);
         console.log(channelListId);
+        console.log(retrieveingTime);
+        console.log(retrieveingTimeStamp);
     }
     catch (error) {
         console.error(error);
     }
       
-    // use for loop to channels here
+    // filter channels conversation here
     for (const channelId of channelListId) {
         try {
             // Call the conversations.history method using WebClient
@@ -68,11 +77,12 @@ async function findConversation(name) {
                 channel: channelId,
                 inclusive: true,
                 // test timestamp here
-                latest: 1671251049,
-                limit: 50
+                latest: retrieveingTimeStamp,
+                limit: 20
             });
-            console.log(conversationHistoryResult);
+            // console.log(conversationHistoryResult);
 
+            // for loop conversations here
             for (const messages of conversationHistoryResult.messages) {
                 
                 // retrieve text
@@ -96,6 +106,7 @@ async function findConversation(name) {
                                 let n;
                                 // console.log(messages.blocks[0].elements[0].elements);
                                 // console.log(messages.blocks[0].elements[0].elements.length);
+                                console.log(messages.reactions[0].name)
                                 
                                 for (n = 0; messages.blocks[0].elements[0].elements.length > n ; n += 1) {
                                 // console.log(messages.blocks[0].elements[0].elements[n].user_id);
@@ -123,10 +134,10 @@ async function findConversation(name) {
                 } 
             }
             
-          }
-          catch (error) {
-            console.error(error);
-          }
+        }
+        catch (error) {
+        console.error(error);
+        }
     }
     console.log(userSelectedConversation);
 
