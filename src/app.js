@@ -32,7 +32,7 @@ const client = new WebClient( SLACK_BOT_TOKEN, {
 let userSelectedConversation = {};
 
 // what conversation you want to filter
-var wordFilter = ["謝謝", "感謝", " :肌肉: ", "感恩", "今天跟"];
+var wordFilter = ["謝謝", "感謝", "感恩", "太棒", "讚", "thank you", "thanks"];
 
 // what emoji you want to filter
 var emojiFilter = [];
@@ -78,7 +78,7 @@ async function findConversation(name) {
                 inclusive: true,
                 // test timestamp here
                 latest: retrieveingTimeStamp,
-                limit: 20
+                limit: 1000
             });
             // console.log(conversationHistoryResult);
 
