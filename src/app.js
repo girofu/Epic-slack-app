@@ -182,6 +182,17 @@ async function findConversation(name) {
 findConversation();
 
 
+app.get('/api/json/:name', (req, res) => {
+    // 取得json檔的資料
+    const data = require('..userSelectedConversationObject.json');
+    // 取得參數
+    const name = req.params.name;
+    // 尋找使用者
+    const user = data.find(user => user.name === name);
+    // 將資料回傳給使用者
+    res.json(user);
+    });
+
 (async () => {
   // Start your app
   await app.start(process.env.PORT || 3000);
