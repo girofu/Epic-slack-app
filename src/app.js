@@ -139,7 +139,7 @@ async function findConversation(name) {
         console.error(error);
         }
     }
-    console.log(userSelectedConversation);
+    // console.log(userSelectedConversation);
 
     // make the console.log result to JSON file
     let userSelectedConversationJson;
@@ -173,25 +173,66 @@ async function findConversation(name) {
     });
     });
 
-    server.listen(2000, () => {
+    server.listen(process.env.port || 2000, () => {
     console.log('伺服器已啟動，網址為http://localhost:2000/');
     });
 }
 
 // Find conversation with a specified channel `name`
-findConversation();
+// findConversation();
 
 
-app.get('/api/json/:name', (req, res) => {
-    // 取得json檔的資料
-    const data = require('..userSelectedConversationObject.json');
-    // 取得參數
-    const name = req.params.name;
-    // 尋找使用者
-    const user = data.find(user => user.name === name);
-    // 將資料回傳給使用者
-    res.json(user);
+
+async function getUserList() {
+    // You probably want to use a database to store any user information ;)
+let usersStore = {};
+
+  try {
+    // Call the users.list method using the WebClient
+    const result = await client.users.list();
+
+    saveUsers(result.members);
+  }
+  catch (error) {
+    console.error(error);
+  }
+  
+
+  // Put users into the JavaScript object
+  function saveUsers(usersArray) {
+    let userIdInList = {};
+    let userList = [];
+    usersArray.forEach(function(user){
+      // Key user info on their unique user ID
+      userIdInList = user["id"];
+
+      // Store the entire user object (you may not need all of the info)
+      usersStore[userIdInList] = user["id"];
+      userList.push({
+        id: user["id"],
+        name: user["name"],
+        real_name: user["real_name"],
+      })
+       
     });
+    // console.log(usersStore); 
+    console.log(userList)
+  }
+};
+
+getUserList();
+
+
+// app.get('/api/json/:name', (req, res) => {
+//     // 取得json檔的資料
+//     const data = require('..userSelectedConversationObject.json');
+//     // 取得參數
+//     const name = req.params.name;
+//     // 尋找使用者
+//     const user = data.find(user => user.name === name);
+//     // 將資料回傳給使用者
+//     res.json(user);
+//     });
 
 (async () => {
   // Start your app
