@@ -139,7 +139,7 @@ async function findConversation(name) {
         console.error(error);
         }
     }
-    // console.log(userSelectedConversation);
+    console.log(userSelectedConversation);
 
     // make the console.log result to JSON file
     let userSelectedConversationJson;
@@ -154,32 +154,11 @@ async function findConversation(name) {
         }
     });  
 
-    // upload the file
-    const filePath = 'userSelectedConversationObject.json';
 
-    const server = http.createServer((req, res) => {
-    fs.readFile(filePath, (err, data) => {
-        if (err) {
-        res.writeHead(404);
-        res.end(JSON.stringify(err));
-        return;
-        }
-
-        res.writeHead(200, {
-        'Content-Type': 'application/json',
-        'Content-Length': data.length,
-        });
-        res.end(data);
-    });
-    });
-
-    server.listen(process.env.port || 2000, () => {
-    console.log('伺服器已啟動，網址為http://localhost:2000/');
-    });
 }
 
 // Find conversation with a specified channel `name`
-// findConversation();
+findConversation();
 
 
 
@@ -220,8 +199,35 @@ let usersStore = {};
   }
 };
 
-getUserList();
+// getUserList();
 
+
+async function printEpics() {
+    // upload the file
+    const filePath = 'userSelectedConversationObject.json';
+
+    const server = http.createServer((req, res) => {
+    fs.readFile(filePath, (err, data) => {
+        if (err) {
+        res.writeHead(404);
+        res.end(JSON.stringify(err));
+        return;
+        }
+
+        res.writeHead(200, {
+        'Content-Type': 'application/json',
+        'Content-Length': data.length,
+        });
+        res.end(data);
+    });
+    });
+
+    server.listen(process.env.port || 2000, () => {
+    console.log('伺服器已啟動，網址為http://localhost:2000/');
+    });
+}
+
+printEpics();
 
 // app.get('/api/json/:name', (req, res) => {
 //     // 取得json檔的資料
@@ -234,9 +240,9 @@ getUserList();
 //     res.json(user);
 //     });
 
-(async () => {
-  // Start your app
-  await app.start(process.env.PORT || 3000);
+// (async () => {
+//   // Start your app
+//   await app.start(process.env.PORT || 3000);
 
-  console.log('⚡️ Bolt app is running!');
-})();
+//   console.log('⚡️ Bolt app is running!');
+// })();
