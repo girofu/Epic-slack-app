@@ -32,7 +32,7 @@ const client = new WebClient( SLACK_BOT_TOKEN, {
 let userSelectedConversation = {};
 
 // what conversation you want to filter
-var wordFilter = ["謝謝", "感謝", "感恩", "太棒", "讚", "thank you", "thanks"];
+var wordFilter = ["謝謝", "感謝", "感恩", "太棒", "讚", "thank you", "thanks", "會議"];
 
 // what emoji you want to filter
 var emojiFilter = [];
@@ -145,9 +145,15 @@ async function findConversation(name) {
 
     for (const user of userList) {
         // console.log(user);
-        console.log(user.id);
+        // console.log(user.id);
+        let users = user.id;
+        // console.log(userSelectedConversation[users]);
+        let userEpic = userSelectedConversation[users];
+        user["epic"] = userEpic;
+        // console.log(userList);
     }
-    
+   
+    console.log(userList);
 
     // make the console.log result to JSON file
     let userSelectedConversationJson;
@@ -162,12 +168,24 @@ async function findConversation(name) {
         }
     });  
 
+    // make the console.log result to JSON file
+    let userListJson;
+    userListJson = JSON.stringify(userList)
+
+    // write the console.log to file
+    fs.writeFile('userList.json', userListJson, (err) => {
+        if (err) {
+            console.error(err);
+        } else {
+            console.log('數據已成功寫入檔案');
+        }
+    }); 
+
 
 }
 
-getUserList();
-// Find conversation with a specified channel `name`
-getUserList().then(findConversation());
+
+
 
 
 let userIdInList = {};
@@ -180,7 +198,7 @@ let usersStore = {};
   try {
     // Call the users.list method using the WebClient
     const result = await client.users.list();
-
+        limit: 
     saveUsers(result.members);
   }
   catch (error) {
@@ -209,18 +227,7 @@ let usersStore = {};
     // console.log(userList)
   }
 
-    // make the console.log result to JSON file
-    let userListJson;
-    userListJson = JSON.stringify(userList)
-
-    // write the console.log to file
-    fs.writeFile('userList.json', userListJson, (err) => {
-        if (err) {
-            console.error(err);
-        } else {
-            console.log('數據已成功寫入檔案');
-        }
-    }); 
+    
 };
 
 
@@ -262,7 +269,13 @@ function printEpics() {
     });
 }
 
-printEpics();
+async function asyncFunc() {
+    await getUserList();
+    await findConversation();
+    await printEpics();
+};
+
+asyncFunc();
 
 // app.get('/api/json/:name', (req, res) => {
 //     // 取得json檔的資料
