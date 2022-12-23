@@ -184,10 +184,6 @@ async function findConversation(name) {
 
 }
 
-
-
-
-
 let userIdInList = {};
 let userList = [];
 
@@ -197,19 +193,29 @@ let usersStore = {};
 
   try {
     // Call the users.list method using the WebClient
-    const result = await client.users.list();
-        limit: 
-    saveUsers(result.members);
+    let cursor;
+    while(true) {
+        const result = await client.users.list({
+            limit: 1000,
+            cursor: cursor
+        });
+
+        saveUsers(result.members);
+
+        if (!result.response_metadata || !result.response_metadata.next_cursor) {
+            break;
+        }
+
+        cursor = result.response_metadata.next_cursor;
+    }
   }
   catch (error) {
     console.error(error);
   }
   
-
   // Put users into the JavaScript object
   function saveUsers(usersArray) {
-    
-    
+
     usersArray.forEach(function(user){
       // Key user info on their unique user ID
       userIdInList = user["id"];
@@ -224,11 +230,23 @@ let usersStore = {};
        
     });
     // console.log(usersStore); 
-    // console.log(userList)
   }
 
-    
+//   // make the console.log result to JSON file
+//   let userListJson;
+//   userListJson = JSON.stringify(userList)
+
+//   // write the console.log to file
+//   fs.writeFile('userList.json', userListJson, (err) => {
+//       if (err) {
+//           console.error(err);
+//       } else {
+//           console.log('數據已成功寫入檔案');
+//       }
+//   }); 
 };
+
+console.log(userList);
 
 
 
@@ -271,8 +289,8 @@ function printEpics() {
 
 async function asyncFunc() {
     await getUserList();
-    await findConversation();
-    await printEpics();
+    // await findConversation();
+    // await printEpics();
 };
 
 asyncFunc();
