@@ -61,9 +61,9 @@ async function findConversation(name) {
             }
         }
         // console.log(conversationListResult);
-        console.log(channelListId);
-        console.log(retrieveingTime);
-        console.log(retrieveingTimeStamp);
+        // console.log(channelListId);
+        // console.log(retrieveingTime);
+        // console.log(retrieveingTimeStamp);
     }
     catch (error) {
         console.error(error);
@@ -106,7 +106,7 @@ async function findConversation(name) {
                                 let n;
                                 // console.log(messages.blocks[0].elements[0].elements);
                                 // console.log(messages.blocks[0].elements[0].elements.length);
-                                console.log(messages.reactions[0].name)
+                                // console.log(messages.reactions[0].name)
                                 
                                 for (n = 0; messages.blocks[0].elements[0].elements.length > n ; n += 1) {
                                 // console.log(messages.blocks[0].elements[0].elements[n].user_id);
@@ -139,7 +139,15 @@ async function findConversation(name) {
         console.error(error);
         }
     }
-    console.log(userSelectedConversation);
+
+    // console.log(userSelectedConversation);
+
+
+    for (const user of userList) {
+        // console.log(user);
+        console.log(user.id);
+    }
+    
 
     // make the console.log result to JSON file
     let userSelectedConversationJson;
@@ -157,10 +165,13 @@ async function findConversation(name) {
 
 }
 
+getUserList();
 // Find conversation with a specified channel `name`
-findConversation();
+getUserList().then(findConversation());
 
 
+let userIdInList = {};
+let userList = [];
 
 async function getUserList() {
     // You probably want to use a database to store any user information ;)
@@ -179,8 +190,8 @@ let usersStore = {};
 
   // Put users into the JavaScript object
   function saveUsers(usersArray) {
-    let userIdInList = {};
-    let userList = [];
+    
+    
     usersArray.forEach(function(user){
       // Key user info on their unique user ID
       userIdInList = user["id"];
@@ -195,14 +206,38 @@ let usersStore = {};
        
     });
     // console.log(usersStore); 
-    console.log(userList)
+    // console.log(userList)
   }
+
+    // make the console.log result to JSON file
+    let userListJson;
+    userListJson = JSON.stringify(userList)
+
+    // write the console.log to file
+    fs.writeFile('userList.json', userListJson, (err) => {
+        if (err) {
+            console.error(err);
+        } else {
+            console.log('數據已成功寫入檔案');
+        }
+    }); 
 };
 
-// getUserList();
 
 
-async function printEpics() {
+// push epics into userList to become the full list with epics
+// function pushEpicsInUserList() {
+//     for (const epics in userSelectedConversation) {
+//         console.log(epics);
+//         console.log(userList);
+//     }
+    
+// };
+
+// pushEpicsInUserList();
+
+
+function printEpics() {
     // upload the file
     const filePath = 'userSelectedConversationObject.json';
 

@@ -1,2 +1,5 @@
 constants.js
 .env
+userList.json
+userSelectedConversationObject.json
+node_modules/
