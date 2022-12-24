@@ -2,7 +2,7 @@ import { SLACK_BOT_TOKEN, SLACK_SIGNING_SECRET } from "./constants";
 
 import * as dotenv from 'dotenv' // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
 dotenv.config()
-import express from 'express'
+const express = require('express');
 
 // Require the Bolt package (github.com/slackapi/bolt)
 const { App } = require("@slack/bolt");
@@ -295,16 +295,28 @@ async function asyncFunc() {
 
 asyncFunc();
 
-// app.get('/api/json/:name', (req, res) => {
+// const appForUser = express();
+
+// appForUser.get('/api/users/:name/age', (req, res) => {
 //     // 取得json檔的資料
-//     const data = require('..userSelectedConversationObject.json');
+//     const data = require('..userList.json');
 //     // 取得參數
 //     const name = req.params.name;
 //     // 尋找使用者
 //     const user = data.find(user => user.name === name);
 //     // 將資料回傳給使用者
-//     res.json(user);
-//     });
+//     if (user) {
+//         res.json({ epic: user.epic });
+//         } else {
+//         // 否則回傳錯誤訊息
+//         res.status(404).json({ error: 'User not found' });
+//         }
+//         });
+    
+// appForUser.listen(process.env.PORT || 3000, () => {
+//     console.log("資料上傳");
+// }) ;
+    
 
 // (async () => {
 //   // Start your app
