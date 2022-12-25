@@ -187,6 +187,7 @@ async function findConversation(name) {
 let userIdInList = {};
 let userList = [];
 
+// get user list in slack work space
 async function getUserList() {
     // You probably want to use a database to store any user information ;)
 let usersStore = {};
@@ -246,8 +247,6 @@ let usersStore = {};
 //   }); 
 };
 
-console.log(userList);
-
 
 
 // push epics into userList to become the full list with epics
@@ -261,62 +260,73 @@ console.log(userList);
 
 // pushEpicsInUserList();
 
+// upload the file
+// function printEpics() {
+//     // upload the file
+//     const filePath = 'userSelectedConversationObject.json';
 
-function printEpics() {
-    // upload the file
-    const filePath = 'userSelectedConversationObject.json';
+//     const server = http.createServer((req, res) => {
+//     fs.readFile(filePath, (err, data) => {
+//         if (err) {
+//         res.writeHead(404);
+//         res.end(JSON.stringify(err));
+//         return;
+//         }
 
-    const server = http.createServer((req, res) => {
-    fs.readFile(filePath, (err, data) => {
-        if (err) {
-        res.writeHead(404);
-        res.end(JSON.stringify(err));
-        return;
-        }
+//         res.writeHead(200, {
+//         'Content-Type': 'application/json',
+//         'Content-Length': data.length,
+//         });
+//         res.end(data);
+//     });
+//     });
 
-        res.writeHead(200, {
-        'Content-Type': 'application/json',
-        'Content-Length': data.length,
-        });
-        res.end(data);
-    });
-    });
-
-    server.listen(process.env.port || 2000, () => {
-    console.log('伺服器已啟動，網址為http://localhost:2000/');
-    });
-}
+//     server.listen(process.env.port || 2000, () => {
+//     console.log('伺服器已啟動，網址為http://localhost:2000/');
+//     });
+// }
 
 async function asyncFunc() {
-    await getUserList();
+    // await getUserList();
     // await findConversation();
     // await printEpics();
+    
 };
 
-asyncFunc();
+// asyncFunc();
 
-// const appForUser = express();
+// use server to upload userList
+const appForUser = express();
 
-// appForUser.get('/api/users/:name/age', (req, res) => {
-//     // 取得json檔的資料
-//     const data = require('..userList.json');
-//     // 取得參數
-//     const name = req.params.name;
-//     // 尋找使用者
-//     const user = data.find(user => user.name === name);
-//     // 將資料回傳給使用者
-//     if (user) {
-//         res.json({ epic: user.epic });
-//         } else {
-//         // 否則回傳錯誤訊息
-//         res.status(404).json({ error: 'User not found' });
-//         }
-//         });
-    
-// appForUser.listen(process.env.PORT || 3000, () => {
-//     console.log("資料上傳");
-// }) ;
-    
+function serverSetting() {
+    appForUser.get('/api/json/users/:name/id', (req, res) => {
+        // 取得json檔的資料
+        const data = require('../userList.json');
+        // 取得參數
+        const name = req.params.name;
+        // 尋找使用者
+        const user = data.find(user => user.name === name);
+        // 將資料回傳給使用者
+        if (user) {
+            res.json({ id: user.id });
+            } else {
+            // 否則回傳錯誤訊息
+            res.status(404).json({ error: 'User not found' });
+            }
+            });
+
+    let port = process.env.PORT;
+    if (port == null || port == "") {
+        port = 8000;
+    }
+        
+    appForUser.listen(port, () => {
+        console.log("資料上傳");
+    });
+};
+
+
+serverSetting();
 
 // (async () => {
 //   // Start your app
