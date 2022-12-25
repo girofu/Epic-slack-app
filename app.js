@@ -301,7 +301,7 @@ const appForUser = express();
 function serverSetting() {
     appForUser.get('/api/json/users/:name/id', (req, res) => {
         // 取得json檔的資料
-        const data = require('../userList.json');
+        const data = require('./userList.json');
         // 取得參數
         const name = req.params.name;
         // 尋找使用者
