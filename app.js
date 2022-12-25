@@ -12,7 +12,7 @@ require('dotenv').config();
 
 
 const app = new App({
-  token: SLACK_BOT_TOKEN,
+  token: process.env.SLACK_BOT_TOKEN,
   signingSecret: process.env.SLACK_SIGNING_SECRET,
 });
 
@@ -22,7 +22,7 @@ const { WebClient, LogLevel } = require("@slack/web-api");
 
 // WebClient instantiates a client that can call API methods
 // When using Bolt, you can use either `app.client` or the `client` passed to listeners.
-const client = new WebClient( SLACK_BOT_TOKEN, {
+const client = new WebClient( process.env.SLACK_BOT_TOKEN, {
   // LogLevel can be imported and used to make debugging simpler
   logLevel: LogLevel.DEBUG
 });
@@ -47,7 +47,7 @@ async function findConversation(name) {
         // Call the conversations.list method using the built-in WebClient
         const conversationListResult = await app.client.conversations.list({
           // The token you used to initialize your app
-          token: SLACK_BOT_TOKEN,
+          token: process.env.SLACK_BOT_TOKEN,
           // set the channel amount search limit 
           limit: 1000
         });
