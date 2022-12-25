@@ -16,8 +16,6 @@
     "esm": "^3.2.25",
     "google-spreadsheet": "^3.3.0"
   },
-  "description": "",
-  "engines": {
-    "node": "12.11.1"
-    }
+  "description": ""
+
 }
