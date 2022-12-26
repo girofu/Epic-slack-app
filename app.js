@@ -367,6 +367,22 @@ function serverSetting() {
             }
     });
 
+    appForUser.get('/api/json/users/:id/address', (req, res) => {
+        // 取得json檔的資料
+        const data = require('./userList.json');
+        // 取得參數
+        const id = req.params.id;
+        // 尋找使用者
+        const user = data.find(user => user.id === id);
+        // 將資料回傳給使用者
+        if (user) {
+            res.json({ address: user.address });
+            } else {
+            // 否則回傳錯誤訊息
+            res.status(404).json({ error: 'User not found' });
+            }
+    });
+
     let port = process.env.PORT;
     if (port == null || port == "") {
         port = 8000;
