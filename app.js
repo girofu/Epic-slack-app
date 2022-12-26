@@ -156,7 +156,7 @@ async function findConversation(name) {
         // console.log(userList);
         const UserIdFromGoogleSheet = userAddressAndId.find(u => u[3] === users);
         if (UserIdFromGoogleSheet) {
-            user["address"] = UserIdFromGoogleSheet[4];
+            user["address"] = UserIdFromGoogleSheet[4].toLowerCase();
         };
     }
    
@@ -291,13 +291,13 @@ let usersStore = {};
 // }
 
 async function asyncFunc() {
-    // await getUserList();
+    await getUserList();
     await findConversation();
     // await printEpics();
     
 };
 
-// asyncFunc();
+asyncFunc();
 
 // use server to upload userList
 const appForUser = express();
