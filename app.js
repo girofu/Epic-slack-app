@@ -399,6 +399,22 @@ function serverSetting() {
             }
     });
 
+    appForUser.get('/api/json/users/:address/real_name', (req, res) => {
+        // 取得json檔的資料
+        const data = require('./userList.json');
+        // 取得參數
+        const address = req.params.address;
+        // 尋找使用者
+        const user = data.find(user => user.address === address);
+        // 將資料回傳給使用者
+        if (user) {
+            res.json({ real_name: user.real_name });
+            } else {
+            // 否則回傳錯誤訊息
+            res.status(404).json({ error: 'User not found' });
+            }
+    });
+
     appForUser.get('/api/json/users/:address/epic', (req, res) => {
         // 取得json檔的資料
         const data = require('./userList.json');
