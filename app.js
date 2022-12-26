@@ -1,4 +1,4 @@
-// import { SLACK_BOT_TOKEN, SLACK_SIGNING_SECRET } from "./constants";
+import { SLACK_BOT_TOKEN, SLACK_SIGNING_SECRET } from "./constants";
 
 import * as dotenv from 'dotenv' // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
 dotenv.config()
@@ -8,9 +8,12 @@ const express = require('express');
 const { App } = require("@slack/bolt");
 const fs = require('fs');
 const http = require('http');
+const userAddressAndId = require("./userAddressAndId.json");
+const userList = require("./userList.json");
 require('dotenv').config();
 
 
+// critial important!! use config to set this information on heroku. and use process.env. to get them
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
   signingSecret: process.env.SLACK_SIGNING_SECRET,
@@ -151,9 +154,22 @@ async function findConversation(name) {
         let userEpic = userSelectedConversation[users];
         user["epic"] = userEpic;
         // console.log(userList);
+        const UserIdFromGoogleSheet = userAddressAndId.find(u => u[3] === users);
+        if (UserIdFromGoogleSheet) {
+            user["address"] = UserIdFromGoogleSheet[4];
+        };
     }
    
     // console.log(userList);
+
+    // for (const user of userAddressAndId) {
+    //     let userIdFromUserAddress = user[3];
+    //     const userIdFromUserList = userList.find(u => u.id === userIdFromUserAddress);
+
+
+    // }
+
+    
 
     // make the console.log result to JSON file
     let userSelectedConversationJson;
@@ -185,7 +201,7 @@ async function findConversation(name) {
 }
 
 let userIdInList = {};
-let userList = [];
+// let userList = [];
 
 // get user list in slack work space
 async function getUserList() {
@@ -275,13 +291,13 @@ let usersStore = {};
 // }
 
 async function asyncFunc() {
-    await getUserList();
+    // await getUserList();
     await findConversation();
     // await printEpics();
     
 };
 
-// asyncFunc();
+asyncFunc();
 
 // use server to upload userList
 const appForUser = express();
