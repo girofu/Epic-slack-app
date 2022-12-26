@@ -297,7 +297,7 @@ async function asyncFunc() {
     
 };
 
-asyncFunc();
+// asyncFunc();
 
 // use server to upload userList
 const appForUser = express();
