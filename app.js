@@ -203,7 +203,7 @@ async function findConversation(name) {
 
 
 let userIdInList = {};
-let userList = [];
+// let userList = [];
 
 // get user list in slack work space
 async function getUserList() {
@@ -299,7 +299,7 @@ async function asyncFunc() {
     
 };
 
-asyncFunc();
+// asyncFunc();
 
 // use server to upload userList
 const appForUser = express();
