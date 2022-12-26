@@ -196,12 +196,14 @@ async function findConversation(name) {
             console.log('數據已成功寫入檔案');
         }
     }); 
-
-
 }
 
+
+
+
+
 let userIdInList = {};
-// let userList = [];
+let userList = [];
 
 // get user list in slack work space
 async function getUserList() {
