@@ -304,6 +304,7 @@ const appForUser = express();
 
 function serverSetting() {
     appForUser.get('/api/json/users/:name/id', (req, res) => {
+        res.set('Access-Control-Allow-Origin', '*');
         // 取得json檔的資料
         const data = require('./userList.json');
         // 取得參數
@@ -384,6 +385,7 @@ function serverSetting() {
     // });
 
     appForUser.get('/api/json/users/:address/name', (req, res) => {
+        res.set('Access-Control-Allow-Origin', '*');
         // 取得json檔的資料
         const data = require('./userList.json');
         // 取得參數
@@ -400,6 +402,7 @@ function serverSetting() {
     });
 
     appForUser.get('/api/json/users/:address/real_name', (req, res) => {
+        res.set('Access-Control-Allow-Origin', '*');
         // 取得json檔的資料
         const data = require('./userList.json');
         // 取得參數
@@ -416,6 +419,7 @@ function serverSetting() {
     });
 
     appForUser.get('/api/json/users/:address/epic', (req, res) => {
+        res.set('Access-Control-Allow-Origin', '*');
         // 取得json檔的資料
         const data = require('./userList.json');
         // 取得參數
