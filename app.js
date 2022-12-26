@@ -196,12 +196,14 @@ async function findConversation(name) {
             console.log('數據已成功寫入檔案');
         }
     }); 
-
-
 }
 
+
+
+
+
 let userIdInList = {};
-// let userList = [];
+let userList = [];
 
 // get user list in slack work space
 async function getUserList() {
@@ -306,7 +308,7 @@ function serverSetting() {
     appForUser.get('/api/json/users/:name/id', (req, res) => {
         res.set('Access-Control-Allow-Origin', '*');
         // 取得json檔的資料
-        const data = require('./userList.json');
+        const data = require('./userListWithEpic.json');
         // 取得參數
         const name = req.params.name;
         // 尋找使用者
@@ -387,7 +389,7 @@ function serverSetting() {
     appForUser.get('/api/json/users/:address/name', (req, res) => {
         res.set('Access-Control-Allow-Origin', '*');
         // 取得json檔的資料
-        const data = require('./userList.json');
+        const data = require('./userListWithEpic.json');
         // 取得參數
         const address = req.params.address;
         // 尋找使用者
@@ -404,7 +406,7 @@ function serverSetting() {
     appForUser.get('/api/json/users/:address/real_name', (req, res) => {
         res.set('Access-Control-Allow-Origin', '*');
         // 取得json檔的資料
-        const data = require('./userList.json');
+        const data = require('./userListWithEpic.json');
         // 取得參數
         const address = req.params.address;
         // 尋找使用者
@@ -421,7 +423,7 @@ function serverSetting() {
     appForUser.get('/api/json/users/:address/epic', (req, res) => {
         res.set('Access-Control-Allow-Origin', '*');
         // 取得json檔的資料
-        const data = require('./userList.json');
+        const data = require('./userListWithEpic.json');
         // 取得參數
         const address = req.params.address;
         // 尋找使用者
