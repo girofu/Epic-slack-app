@@ -110,25 +110,31 @@ async function findConversation(name) {
                                 // console.log(messages.blocks[0].elements[0].elements);
                                 // console.log(messages.blocks[0].elements[0].elements.length);
                                 // console.log(messages.reactions[0].name)
-                                
+                                let userSelected = [];
+                                let isUserSelected;
+
                                 for (n = 0; messages.blocks[0].elements[0].elements.length > n ; n += 1) {
                                 // console.log(messages.blocks[0].elements[0].elements[n].user_id);
                                 userId = messages.blocks[0].elements[0].elements[n].user_id;
                                 speakUser = messages.user;
+                                isUserSelected = userSelected.includes(userId);
                                 
-
-                                if (userId != speakUser) {
-                                    if (userId != undefined) {
-                                        if (userSelectedConversation.hasOwnProperty(userId)) {
-                                            // push messageText into userId, or add a new useId into userSelectedConversation
-                                            userSelectedConversation[userId].push(messages.text); 
-                                        } else {
-                                            userSelectedConversation[userId] = [];
-                                            userSelectedConversation[userId].push(messages.text);
-                                        };
-                                        isConversationSelected = true;
+                                    if (!isUserSelected) {
+                                        if (userId != speakUser) {
+                                            if (userId != undefined) {
+                                                
+                                                if (userSelectedConversation.hasOwnProperty(userId)) {
+                                                    // push messageText into userId, or add a new useId into userSelectedConversation
+                                                    userSelectedConversation[userId].push(messages.text); 
+                                                } else {
+                                                    userSelectedConversation[userId] = [];
+                                                    userSelectedConversation[userId].push(messages.text);
+                                                };
+                                                isConversationSelected = true;
+                                                userSelected.push(userId);
+                                            }
+                                        }
                                     }
-                                }
                                 }
                             }
                         } 
@@ -293,13 +299,14 @@ let usersStore = {};
 // }
 
 async function asyncFunc() {
-    await getUserList();
-    await findConversation();
+    // await getUserList();
+    // await findConversation();
     // await printEpics();
+    
     
 };
 
-// asyncFunc();
+asyncFunc();
 
 // use server to upload userList
 const appForUser = express();
@@ -447,8 +454,8 @@ function serverSetting() {
     });
 };
 
-
 serverSetting();
+
 
 // (async () => {
 //   // Start your app

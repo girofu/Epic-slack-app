@@ -8,8 +8,9 @@ const fs = require('fs');
 async function modifyEpic() {
     let userListWithEpic = userList;
 
-    for (const user of userListWithEpic) {
+    for (const user of userList) {
         if (user.epic !== undefined) {
+            let newEpics = [];
             let newEpic;
             for (const epic of user.epic) {
                 const pattern = /<@(.*?)>/g;
@@ -26,13 +27,16 @@ async function modifyEpic() {
                         let userId = "<@" + u.id + ">";
                         // console.log(userId);
                         if (userId === match) {
-                            return u.real_name;
+                            let userName = "<" + u.real_name + ">"; 
+                            return userName;
+                            
                         }
                     // return match;
                     } 
                 });
-                // console.log(newEpic);
-                // console.log(newEpic);
+                console.log(newEpic);
+                newEpics.push(newEpic);
+                console.log(newEpics);
 
                 // while ((match = pattern.exec(newEpic)) !== null) {
                     
@@ -50,7 +54,7 @@ async function modifyEpic() {
                 // }
 
             }
-            user.epic = newEpic;
+            user.epic = newEpics;
             console.log(user);
         }
         
