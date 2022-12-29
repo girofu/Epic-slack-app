@@ -151,8 +151,8 @@ async function findConversation(name) {
 
     // console.log(userSelectedConversation);
 
-
-    for (const user of userList) {
+    let userListWithRawEpic = userList;
+    for (const user of userListWithRawEpic) {
         // console.log(user);
         // console.log(user.id);
         let users = user.id;
@@ -192,10 +192,10 @@ async function findConversation(name) {
 
     // make the console.log result to JSON file
     let userListJson;
-    userListJson = JSON.stringify(userList)
+    userListJson = JSON.stringify(userListWithRawEpic)
 
     // write the console.log to file
-    fs.writeFile('userList.json', userListJson, (err) => {
+    fs.writeFile('userListWithRawEpic.json', userListJson, (err) => {
         if (err) {
             console.error(err);
         } else {

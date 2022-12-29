@@ -1,14 +1,14 @@
 const userSelectedConversation = require("./userSelectedConversationObject.json")
-const userList = require("./userList.json");
+const userListWithRawEpic = require("./userListWithRawEpic.json");
 const { ConsoleLogger } = require("@slack/logger");
 const fs = require('fs');
 
 
 
 async function modifyEpic() {
-    let userListWithEpic = userList;
+    let userListWithEpic = userListWithRawEpic;
 
-    for (const user of userList) {
+    for (const user of userListWithRawEpic) {
         if (user.epic !== undefined) {
             let newEpics = [];
             let newEpic;
@@ -23,7 +23,7 @@ async function modifyEpic() {
 
                 newEpic = epic.replace(/<@.*?>/g , (match) => {
                     // console.log(match)
-                    for (const u of userList) {
+                    for (const u of userListWithRawEpic) {
                         let userId = "<@" + u.id + ">";
                         // console.log(userId);
                         if (userId === match) {
