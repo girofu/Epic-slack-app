@@ -3,6 +3,6 @@ constants.js
 userList.json
 userSelectedConversationObject.json
 node_modules/
-userAddressAndid.json
+userAddressAndId.json
 userListWithRawEpic.json
 userListWithEpic.json
