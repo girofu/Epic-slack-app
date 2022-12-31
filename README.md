@@ -1,2 +1,2 @@
 # Epic-slack-app
-retrieve the selected conversation from slack
+Retrieve selected conversations from slack, transfer these conversation to a prefered data objects and build api for others to retrieve the data.

@@ -8,8 +8,8 @@ const express = require('express');
 const { App } = require("@slack/bolt");
 const fs = require('fs');
 const http = require('http');
-const userAddressAndId = require("./userAddressAndId.json");
-const userList = require("./userList.json");
+const userAddressAndId = require("../userAddressAndId.json");
+const userList = require("../userList.json");
 require('dotenv').config();
 
 
@@ -315,7 +315,7 @@ function serverSetting() {
     appForUser.get('/api/json/users/:name/id', (req, res) => {
         res.set('Access-Control-Allow-Origin', '*');
         // 取得json檔的資料
-        const data = require('./userListWithEpic.json');
+        const data = require('../userListWithEpic.json');
         // 取得參數
         const name = req.params.name;
         // 尋找使用者
@@ -396,7 +396,7 @@ function serverSetting() {
     appForUser.get('/api/json/users/:address/name', (req, res) => {
         res.set('Access-Control-Allow-Origin', '*');
         // 取得json檔的資料
-        const data = require('./userListWithEpic.json');
+        const data = require('../userListWithEpic.json');
         // 取得參數
         const address = req.params.address;
         // 尋找使用者
@@ -413,7 +413,7 @@ function serverSetting() {
     appForUser.get('/api/json/users/:address/real_name', (req, res) => {
         res.set('Access-Control-Allow-Origin', '*');
         // 取得json檔的資料
-        const data = require('./userListWithEpic.json');
+        const data = require('../userListWithEpic.json');
         // 取得參數
         const address = req.params.address;
         // 尋找使用者
@@ -430,7 +430,7 @@ function serverSetting() {
     appForUser.get('/api/json/users/:address/epic', (req, res) => {
         res.set('Access-Control-Allow-Origin', '*');
         // 取得json檔的資料
-        const data = require('./userListWithEpic.json');
+        const data = require('../userListWithEpic.json');
         // 取得參數
         const address = req.params.address;
         // 尋找使用者

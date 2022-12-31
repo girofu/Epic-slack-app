@@ -1,5 +1,5 @@
-const userSelectedConversation = require("./userSelectedConversationObject.json")
-const userListWithRawEpic = require("./userListWithRawEpic.json");
+const userSelectedConversation = require("../userSelectedConversationObject.json")
+const userListWithRawEpic = require("../userListWithRawEpic.json");
 const { ConsoleLogger } = require("@slack/logger");
 const fs = require('fs');
 
