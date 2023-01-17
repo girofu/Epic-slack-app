@@ -12,16 +12,14 @@ async function modifyEpic() {
         if (user.epic !== undefined) {
             let newEpics = [];
             let newEpic;
+            let epicBotRemoved;
+
             for (const epic of user.epic) {
-                const pattern = /<@(.*?)>/g;
-                let match;
-                const matches = [];
-                // let newEpic = epic;
-                let i = 0;
+                
+                epicBotRemoved = epic.replaceAll("<@U04FCLTTECE>", "");
                 // find the pattern
 
-
-                newEpic = epic.replace(/<@.*?>/g , (match) => {
+                newEpic = epicBotRemoved.replace(/<@.*?>/g , (match) => {
                     // console.log(match)
                     for (const u of userListWithRawEpic) {
                         let userId = "<@" + u.id + ">";
@@ -34,27 +32,46 @@ async function modifyEpic() {
                     // return match;
                     } 
                 });
-                console.log(newEpic);
+                // console.log(newEpic);
                 newEpics.push(newEpic);
-                console.log(newEpics);
-
-                // while ((match = pattern.exec(newEpic)) !== null) {
-                    
-                //     // use user id to replace the pattern site
-                //     for (const u of userList) {
-                //         if (u.id === match[1]) {
-                //             // console.log(match);
-                //             // console.log(u.id);
-                //             // console.log(match[1]);
-                //             // console.log(u.real_name);
-                //             newEpic = epic.replace(/<@.*?>/, u.real_name);
-                //         }
-                //     } 
-                //     console.log(match);
-                // }
+                // console.log(newEpics);
 
             }
             user.epic = newEpics;
+            // console.log(user);
+        };
+
+        if (user.epic002 !== undefined) {
+            let newEpics002 = [];
+            let newEpic002;
+            let epic002BotRemoved;
+            // modify epic002
+            for (const epic002 of user.epic002) {
+                
+                // find the pattern
+
+                epic002BotRemoved = epic002.replaceAll("<@U04FCLTTECE>", "");
+
+                newEpic002 = epic002BotRemoved.replace(/<@.*?>/g , (match) => {
+                    // console.log(match)
+                    for (const u of userListWithRawEpic) {
+                        let userId = "<@" + u.id + ">";
+                        // console.log(userId);
+                        if (userId === match) {
+                            let userName = "<" + u.real_name + ">"; 
+                            return userName;
+                            
+                        }
+                    // return match;
+                    } 
+                });
+                
+                // console.log(newEpic002);
+                newEpics002.push(newEpic002);
+                // console.log(newEpics002);
+
+            }
+            user.epic002 = newEpics002;
             console.log(user);
         }
         

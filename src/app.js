@@ -33,6 +33,7 @@ const client = new WebClient( process.env.SLACK_BOT_TOKEN, {
 
 // the object that save all the conversation
 let userSelectedConversation = {};
+let userSelectedConversation002 = {};
 
 // what conversation you want to filter
 var wordFilter = ["謝謝", "感謝", "感恩", "太棒", "讚", "thank you", "thanks"];
@@ -141,6 +142,52 @@ async function findConversation(name) {
                     }
                     } 
                 } 
+                // filter002 function
+                
+
+                        let patternResult;  
+                        let pattern = /<@U04FCLTTECE>/;
+
+                        // see if the @someone happen in the text
+                        patternResult = pattern.test(messagesText);
+                        if (patternResult) {
+                            if (messages.subtype != "channel_join") { 
+                                let userId = '';
+                                let speakUser = '';
+                                // save the @someone as userId 
+                                let n;
+                                // console.log(messages.blocks[0].elements[0].elements);
+                                // console.log(messages.blocks[0].elements[0].elements.length);
+                                // console.log(messages.reactions[0].name)
+                                let userSelected = [];
+                                let isUserSelected;
+
+                                for (const user of userList) {
+                                // console.log(messages.blocks[0].elements[0].elements[n].user_id);
+                                userId = user.id;
+                                speakUser = messages.user;
+                                isUserSelected = userSelected.includes(userId);
+                                
+                                    if (!isUserSelected) {
+                                        if (userId != speakUser) {
+                                            if (messagesText.includes(userId)) {
+                                                
+                                                if (userSelectedConversation002.hasOwnProperty(userId)) {
+                                                    // push messageText into userId, or add a new useId into userSelectedConversation
+                                                    userSelectedConversation002[userId].push(messages.text); 
+                                                } else {
+                                                    userSelectedConversation002[userId] = [];
+                                                    userSelectedConversation002[userId].push(messages.text);
+                                                };
+                                                userSelected.push(userId);
+                                            }
+                                        }
+                                    }
+                                }
+                            } 
+                    }
+                    
+
             }
             
         }
@@ -158,15 +205,16 @@ async function findConversation(name) {
         let users = user.id;
         // console.log(userSelectedConversation[users]);
         let userEpic = userSelectedConversation[users];
+        let userEpic002 = userSelectedConversation002[users];
         user["epic"] = userEpic;
+        user["epic002"] = userEpic002
         // console.log(userList);
         const UserIdFromGoogleSheet = userAddressAndId.find(u => u[3] === users);
         if (UserIdFromGoogleSheet != undefined) {
             user["address"] = UserIdFromGoogleSheet[4].toLowerCase();
         };
     }
-   
-    // console.log(userList);
+    
 
     // for (const user of userAddressAndId) {
     //     let userIdFromUserAddress = user[3];
@@ -178,17 +226,30 @@ async function findConversation(name) {
     
 
     // make the console.log result to JSON file
-    let userSelectedConversationJson;
-    userSelectedConversationJson = JSON.stringify(userSelectedConversation)
+    // let userSelectedConversationJson;
+    // userSelectedConversationJson = JSON.stringify(userSelectedConversation)
+
+    // // write the console.log to file
+    // fs.writeFile('userSelectedConversationObject.json', userSelectedConversationJson, (err) => {
+    //     if (err) {
+    //         console.error(err);
+    //     } else {
+    //         console.log('數據已成功寫入檔案');
+    //     }
+    // });  
+
+    // make the console.log result to JSON file
+    let userSelectedConversationJson002;
+    userSelectedConversationJson002 = JSON.stringify(userSelectedConversation002)
 
     // write the console.log to file
-    fs.writeFile('userSelectedConversationObject.json', userSelectedConversationJson, (err) => {
+    fs.writeFile('userSelectedConversationObject002.json', userSelectedConversationJson002, (err) => {
         if (err) {
             console.error(err);
         } else {
             console.log('數據已成功寫入檔案');
         }
-    });  
+    });
 
     // make the console.log result to JSON file
     let userListJson;
@@ -438,6 +499,23 @@ function serverSetting() {
         // 將資料回傳給使用者
         if (user) {
             res.json({ epic: user.epic });
+            } else {
+            // 否則回傳錯誤訊息
+            res.status(404).json({ error: 'User not found' });
+            }
+    });
+
+    appForUser.get('/api/json/users/:address/epic002', (req, res) => {
+        res.set('Access-Control-Allow-Origin', '*');
+        // 取得json檔的資料
+        const data = require('../userListWithEpic.json');
+        // 取得參數
+        const address = req.params.address;
+        // 尋找使用者
+        const user = data.find(user => user.address === address);
+        // 將資料回傳給使用者
+        if (user) {
+            res.json({ epic002: user.epic002 });
             } else {
             // 否則回傳錯誤訊息
             res.status(404).json({ error: 'User not found' });
