@@ -8,8 +8,8 @@ const express = require('express');
 const { App } = require("@slack/bolt");
 const fs = require('fs');
 const http = require('http');
-const userAddressAndId = require("../userAddressAndId.json");
-const userList = require("../userList.json");
+// const userAddressAndId = require("../userAddressAndId.json");
+// const userList = require("../userList.json");
 require('dotenv').config();
 
 
