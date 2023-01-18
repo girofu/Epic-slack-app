@@ -153,15 +153,10 @@ async function findConversation(name) {
                         let userId = '';
                         let speakUser = '';
                         // save the @someone as userId 
-                        let n;
-                        // console.log(messages.blocks[0].elements[0].elements);
-                        // console.log(messages.blocks[0].elements[0].elements.length);
-                        // console.log(messages.reactions[0].name)
                         let userSelected = [];
                         let isUserSelected;
 
                         for (const user of userList) {
-                        // console.log(messages.blocks[0].elements[0].elements[n].user_id);
                         userId = user.id;
                         speakUser = messages.user;
                         isUserSelected = userSelected.includes(userId);
@@ -184,11 +179,59 @@ async function findConversation(name) {
                         }
                     } 
                 }
-                
+
+                // thread conversation retrieving
+                let threadTs;
+                if (messages.thread_ts !== undefined) {
+                    threadTs = messages.thread_ts;
+                    try {
+                        const threadConversation = await client.conversations.replies({
+                            channel: channelId,
+                            ts: threadTs,
+                            limit: 1000
+                        });
+                        for (const conversation of threadConversation.messages) {
+                            let threadPatternResult;
+                            let conversationText = conversation.text;
+                            threadPatternResult = pattern.test(conversation.text);
+                            if (threadPatternResult) {
+                                let userId = '';
+                                let speakUser = '';
+                                // save the @someone as userId 
+                                let userSelected = [];
+                                let isUserSelected;
+        
+                                for (const user of userList) {
+                                userId = user.id;
+                                speakUser = conversation.user;
+                                isUserSelected = userSelected.includes(userId);
+                                
+                                    if (!isUserSelected) {
+                                        if (userId != speakUser) {
+                                            if (conversationText.includes(userId)) {
+                                                if (userSelectedConversation002.hasOwnProperty(userId)) {
+                                                    // push messageText into userId, or add a new useId into userSelectedConversation
+                                                    userSelectedConversation002[userId].push(conversationText); 
+                                                } else {
+                                                    userSelectedConversation002[userId] = [];
+                                                    userSelectedConversation002[userId].push(conversationText);
+                                                };
+                                                userSelected.push(userId);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    catch (error) {
+                        console.error(error);
+                    }
+                }
             }    
         }
         catch (error) {
-        console.error(error);
+            console.error(error);
         }
     }
 
@@ -363,7 +406,7 @@ async function asyncFunc() {
     
 };
 
-// asyncFunc();
+asyncFunc();
 
 // use server to upload userList
 const appForUser = express();
