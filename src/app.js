@@ -48,26 +48,31 @@ const retrieveingTimeStamp = retrieveingTime.setDate();
 // Find conversation ID using the conversations.list method
 async function findConversation(name) {
     try {
-        // Call the conversations.list method using the built-in WebClient
-        const conversationListResult = await app.client.conversations.list({
-          // The token you used to initialize your app
-          token: process.env.SLACK_BOT_TOKEN,
-          // set the channel amount search limit 
-          limit: 1000
-        });
-
+        let cursor;
         var channelListId = [];
+        while (true) {
+            // Call the conversations.list method using the built-in WebClient
+            const conversationListResult = await app.client.conversations.list({
+                // The token you used to initialize your app
+                token: process.env.SLACK_BOT_TOKEN,
+                // set the channel amount search limit 
+                limit: 1000,
+                cursor: cursor
+            });
 
-        for (const channel of conversationListResult.channels) {
-            if (channel.is_member) {
-                channelListId.push(channel.id);
-                // console.log(channel.id);
+            for (const channel of conversationListResult.channels) {
+                if (channel.is_member) {
+                    channelListId.push(channel.id);
+                    // console.log(channel.id);
+                }
             }
-        }
-        // console.log(conversationListResult);
-        // console.log(channelListId);
-        // console.log(retrieveingTime);
-        // console.log(retrieveingTimeStamp);
+            if (!conversationListResult.response_metadata || !conversationListResult.response_metadata.next_cursor) {
+                break;
+            }
+    
+            cursor = conversationListResult.response_metadata.next_cursor;
+        }   
+
     }
     catch (error) {
         console.error(error);
@@ -76,13 +81,16 @@ async function findConversation(name) {
     // filter channels conversation here
     for (const channelId of channelListId) {
         try {
+            let cursor;
+            while (true) {
             // Call the conversations.history method using WebClient
             const conversationHistoryResult = await client.conversations.history({
                 channel: channelId,
                 inclusive: true,
                 // test timestamp here
                 latest: retrieveingTimeStamp,
-                limit: 1000
+                limit: 1000,
+                cursor: cursor
             });
             // console.log(conversationHistoryResult);
 
@@ -228,6 +236,12 @@ async function findConversation(name) {
                         console.error(error);
                     }
                 }
+            }
+            if (!conversationHistoryResult.response_metadata || !conversationHistoryResult.response_metadata.next_cursor) {
+                break;
+            }
+    
+            cursor = conversationHistoryResult.response_metadata.next_cursor;
             }    
         }
         catch (error) {
