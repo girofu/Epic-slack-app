@@ -10,6 +10,7 @@ const fs = require('fs');
 const http = require('http');
 const userAddressAndId = require("../userAddressAndId.json");
 const userList = require("../userList.json");
+const userSelectedConversation = require("../userSelectedConversationObject.json");
 require('dotenv').config();
 
 
@@ -32,7 +33,7 @@ const client = new WebClient( process.env.SLACK_BOT_TOKEN, {
 
 
 // the object that save all the conversation
-let userSelectedConversation = {};
+// let userSelectedConversation = {};
 let userSelectedConversation002 = {};
 
 // what conversation you want to filter
