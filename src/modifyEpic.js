@@ -5,7 +5,7 @@ const fs = require('fs');
 
 
 
-async function modifyEpic() {
+export async function modifyEpic() {
     let userListWithEpic = userListWithRawEpic;
 
     for (const user of userListWithRawEpic) {
@@ -90,9 +90,3 @@ async function modifyEpic() {
        }
    }); 
 }
-
-modifyEpic();
-
-module.exports = {
-    modifyEpic,
-  };

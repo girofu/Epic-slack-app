@@ -1,6 +1,8 @@
-// import { SLACK_BOT_TOKEN, SLACK_SIGNING_SECRET } from "./constants";
 
 import * as dotenv from 'dotenv' // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
+// import {getUserList} from "./getUserList";
+import {modifyEpic} from "./modifyEpic";
+// import {epicWriteIn} from "./epicWriteIn";
 dotenv.config()
 const express = require('express');
 
@@ -11,6 +13,7 @@ const http = require('http');
 const userAddressAndId = require("../userAddressAndId.json");
 const userList = require("../userList.json");
 const userSelectedConversation = require("../userSelectedConversationObject.json");
+// const userSelectedConversation002 = require("../userSelectedConversationObject002.json");
 require('dotenv').config();
 
 
@@ -34,7 +37,7 @@ const client = new WebClient( process.env.SLACK_BOT_TOKEN, {
 
 // the object that save all the conversation
 // let userSelectedConversation = {};
-let userSelectedConversation002 = {};
+
 
 // what conversation you want to filter
 var wordFilter = ["謝謝", "感謝", "感恩", "太棒", "讚", "thank you", "thanks"];
@@ -48,6 +51,7 @@ const retrieveingTimeStamp = retrieveingTime.setDate();
 
 // Find conversation ID using the conversations.list method
 async function findConversation(name) {
+    let userSelectedConversation002 = {};
     try {
         let cursor;
         var channelListId = [];
@@ -200,32 +204,35 @@ async function findConversation(name) {
                             limit: 1000
                         });
                         for (const conversation of threadConversation.messages) {
-                            let threadPatternResult;
-                            let conversationText = conversation.text;
-                            threadPatternResult = pattern.test(conversation.text);
-                            if (threadPatternResult) {
-                                let userId = '';
-                                let speakUser = '';
-                                // save the @someone as userId 
-                                let userSelected = [];
-                                let isUserSelected;
-        
-                                for (const user of userList) {
-                                userId = user.id;
-                                speakUser = conversation.user;
-                                isUserSelected = userSelected.includes(userId);
-                                
-                                    if (!isUserSelected) {
-                                        if (userId != speakUser) {
-                                            if (conversationText.includes(userId)) {
-                                                if (userSelectedConversation002.hasOwnProperty(userId)) {
-                                                    // push messageText into userId, or add a new useId into userSelectedConversation
-                                                    userSelectedConversation002[userId].push(conversationText); 
-                                                } else {
-                                                    userSelectedConversation002[userId] = [];
-                                                    userSelectedConversation002[userId].push(conversationText);
-                                                };
-                                                userSelected.push(userId);
+                            if (conversation.subtype == undefined) {
+                                let threadPatternResult;
+                                let conversationText = conversation.text;
+                                threadPatternResult = pattern.test(conversation.text);
+                                if (threadPatternResult) {
+
+                                    let userId = '';
+                                    let speakUser = '';
+                                    // save the @someone as userId 
+                                    let userSelected = [];
+                                    let isUserSelected;
+            
+                                    for (const user of userList) {
+                                    userId = user.id;
+                                    speakUser = conversation.user;
+                                    isUserSelected = userSelected.includes(userId);
+                                    
+                                        if (!isUserSelected) {
+                                            if (userId != speakUser) {
+                                                if (conversationText.includes(userId)) {
+                                                    if (userSelectedConversation002.hasOwnProperty(userId)) {
+                                                        // push messageText into userId, or add a new useId into userSelectedConversation
+                                                        userSelectedConversation002[userId].push(conversationText); 
+                                                    } else {
+                                                        userSelectedConversation002[userId] = [];
+                                                        userSelectedConversation002[userId].push(conversationText);
+                                                    };
+                                                    userSelected.push(userId);
+                                                }
                                             }
                                         }
                                     }
@@ -251,30 +258,11 @@ async function findConversation(name) {
     }
 
     // console.log(userSelectedConversation);
-
-    let userListWithRawEpic = userList;
-    for (const user of userListWithRawEpic) {
-        // console.log(user);
-        // console.log(user.id);
-        let users = user.id;
-        // console.log(userSelectedConversation[users]);
-        let userEpic = userSelectedConversation[users];
-        let userEpic002 = userSelectedConversation002[users];
-        user["epic"] = userEpic;
-        user["epic002"] = userEpic002
-        // console.log(userList);
-        const UserIdFromGoogleSheet = userAddressAndId.find(u => u[3] === users);
-        if (UserIdFromGoogleSheet != undefined) {
-            user["address"] = UserIdFromGoogleSheet[4].toLowerCase();
-        };
-    }
     
 
     // for (const user of userAddressAndId) {
     //     let userIdFromUserAddress = user[3];
     //     const userIdFromUserList = userList.find(u => u.id === userIdFromUserAddress);
-
-
     // }
 
     
@@ -305,116 +293,14 @@ async function findConversation(name) {
         }
     });
 
-    // make the console.log result to JSON file
-    let userListJson;
-    userListJson = JSON.stringify(userListWithRawEpic)
 
-    // write the console.log to file
-    fs.writeFile('userListWithRawEpic.json', userListJson, (err) => {
-        if (err) {
-            console.error(err);
-        } else {
-            console.log('數據已成功寫入檔案');
-        }
-    }); 
 }
-
-let userIdInList = {};
-// let userList = [];
-
-// get user list in slack work space
-async function getUserList() {
-    // You probably want to use a database to store any user information ;)
-let usersStore = {};
-
-  try {
-    // Call the users.list method using the WebClient
-    let cursor;
-    while(true) {
-        const result = await client.users.list({
-            limit: 1000,
-            cursor: cursor
-        });
-
-        saveUsers(result.members);
-
-        if (!result.response_metadata || !result.response_metadata.next_cursor) {
-            break;
-        }
-
-        cursor = result.response_metadata.next_cursor;
-    }
-  }
-  catch (error) {
-    console.error(error);
-  }
-  
-  // Put users into the JavaScript object
-  function saveUsers(usersArray) {
-
-    usersArray.forEach(function(user){
-      // Key user info on their unique user ID
-      userIdInList = user["id"];
-
-      // Store the entire user object (you may not need all of the info)
-      usersStore[userIdInList] = user["id"];
-      userList.push({
-        id: user["id"],
-        name: user["name"],
-        real_name: user["real_name"],
-      })
-       
-    });
-    // console.log(usersStore); 
-  }
-
-  // make the console.log result to JSON file
-  let userListJson;
-  userListJson = JSON.stringify(userList)
-
-  // write the console.log to file
-  fs.writeFile('userList.json', userListJson, (err) => {
-      if (err) {
-          console.error(err);
-      } else {
-          console.log('數據已成功寫入檔案');
-      }
-  }); 
-};
-
-
-// upload the file
-// function printEpics() {
-//     // upload the file
-//     const filePath = 'userSelectedConversationObject.json';
-
-//     const server = http.createServer((req, res) => {
-//     fs.readFile(filePath, (err, data) => {
-//         if (err) {
-//         res.writeHead(404);
-//         res.end(JSON.stringify(err));
-//         return;
-//         }
-
-//         res.writeHead(200, {
-//         'Content-Type': 'application/json',
-//         'Content-Length': data.length,
-//         });
-//         res.end(data);
-//     });
-//     });
-
-//     server.listen(process.env.port || 2000, () => {
-//     console.log('伺服器已啟動，網址為http://localhost:2000/');
-//     });
-// }
 
 async function asyncFunc() {
     // await getUserList();
-    await findConversation();
-    // await printEpics();
-    
-    
+    // await findConversation();
+    // await epicWriteIn();
+    modifyEpic();
 };
 
 asyncFunc();
