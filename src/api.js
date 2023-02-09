@@ -162,3 +162,5 @@ export function serverSetting() {
         console.log("資料上傳");
     });
 };
+
+serverSetting();
