@@ -3,7 +3,7 @@ const express = require('express');
 // use server to upload userList
 const appForUser = express();
 
-function serverSetting() {
+export function serverSetting() {
     appForUser.get('/api/json/users/:name/id', (req, res) => {
         res.set('Access-Control-Allow-Origin', '*');
         // 取得json檔的資料
@@ -162,5 +162,3 @@ function serverSetting() {
         console.log("資料上傳");
     });
 };
-
-serverSetting();

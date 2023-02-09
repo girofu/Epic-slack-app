@@ -3,6 +3,7 @@ import * as dotenv from 'dotenv' // see https://github.com/motdotla/dotenv#how-d
 // import {getUserList} from "./getUserList";
 import {modifyEpic} from "./modifyEpic";
 // import {epicWriteIn} from "./epicWriteIn";
+import {serverSetting} from "./api";
 dotenv.config()
 const express = require('express');
 
@@ -88,168 +89,179 @@ async function findConversation(name) {
         try {
             let cursor;
             while (true) {
-            // Call the conversations.history method using WebClient
-            const conversationHistoryResult = await client.conversations.history({
-                channel: channelId,
-                inclusive: true,
-                // test timestamp here
-                latest: retrieveingTimeStamp,
-                limit: 1000,
-                cursor: cursor
-            });
-            // console.log(conversationHistoryResult);
+                // Call the conversations.history method using WebClient
+                const conversationHistoryResult = await client.conversations.history({
+                    channel: channelId,
+                    inclusive: true,
+                    // test timestamp here
+                    latest: retrieveingTimeStamp,
+                    limit: 1000,
+                    cursor: cursor
+                });
+                // console.log(conversationHistoryResult);
 
-            // for loop conversations here
-            for (const messages of conversationHistoryResult.messages) {
-                
-                // retrieve text
-                var messagesText = messages.text;
-                let isConversationSelected = false;
-                // filter the conversation with positive compliment
-                for (var i = 0; i < wordFilter.length; i += 1) {
-                    if (!isConversationSelected) {
-                        var isPositive = messagesText.includes(wordFilter[i]);
-                        if (isPositive) {
-                            let patternResult;  
-                            let pattern = /<@/;
+                let tsSelected = [];
+                // for loop conversations here
+                for (const messages of conversationHistoryResult.messages) {
+                    
+                    // retrieve text
+                    var messagesText = messages.text;
+                    let isConversationSelected = false;
+                    
+                    if (!tsSelected.includes(messages.ts)) {
+                        // record selected messages by ts 
+                        tsSelected.push(messages.ts);
+                        // filter the conversation with positive compliment
+                        for (var i = 0; i < wordFilter.length; i += 1) {
+                            if (!isConversationSelected) {
+                                var isPositive = messagesText.includes(wordFilter[i]);
+                                if (isPositive) {
+                                    let patternResult;  
+                                    let pattern = /<@/;
 
-                            // see if the @someone happen in the text
-                            patternResult = pattern.test(messagesText);
-                            if (patternResult) {
-                                if (messages.subtype != "channel_join") { 
-                                    let userId = '';
-                                    let speakUser = '';
-                                    // save the @someone as userId 
-                                    let n;
-                                    // console.log(messages.blocks[0].elements[0].elements);
-                                    // console.log(messages.blocks[0].elements[0].elements.length);
-                                    // console.log(messages.reactions[0].name)
-                                    let userSelected = [];
-                                    let isUserSelected;
+                                    // see if the @someone happen in the text
+                                    patternResult = pattern.test(messagesText);
+                                    if (patternResult) {
+                                        if (messages.subtype != "channel_join") { 
+                                            let userId = '';
+                                            let speakUser = '';
+                                            // save the @someone as userId 
+                                            let n;
+                                            // console.log(messages.blocks[0].elements[0].elements);
+                                            // console.log(messages.blocks[0].elements[0].elements.length);
+                                            // console.log(messages.reactions[0].name)
+                                            let userSelected = [];
+                                            let isUserSelected;
 
-                                    for (n = 0; messages.blocks[0].elements[0].elements.length > n ; n += 1) {
-                                        // console.log(messages.blocks[0].elements[0].elements[n].user_id);
-                                        userId = messages.blocks[0].elements[0].elements[n].user_id;
-                                        speakUser = messages.user;
-                                        isUserSelected = userSelected.includes(userId);
-                                    
-                                        if (!isUserSelected) {
-                                            if (userId != speakUser) {
-                                                if (userId != undefined) {
-                                                    
-                                                    if (userSelectedConversation.hasOwnProperty(userId)) {
-                                                        // push messageText into userId, or add a new useId into userSelectedConversation
-                                                        userSelectedConversation[userId].push(messages.text); 
-                                                    } else {
-                                                        userSelectedConversation[userId] = [];
-                                                        userSelectedConversation[userId].push(messages.text);
-                                                    };
-                                                    isConversationSelected = true;
-                                                    userSelected.push(userId);
+                                            for (n = 0; messages.blocks[0].elements[0].elements.length > n ; n += 1) {
+                                                // console.log(messages.blocks[0].elements[0].elements[n].user_id);
+                                                userId = messages.blocks[0].elements[0].elements[n].user_id;
+                                                speakUser = messages.user;
+                                                isUserSelected = userSelected.includes(userId);
+                                            
+                                                if (!isUserSelected) {
+                                                    if (userId != speakUser) {
+                                                        if (userId != undefined) {
+                                                            
+                                                            if (userSelectedConversation.hasOwnProperty(userId)) {
+                                                                // push messageText into userId, or add a new useId into userSelectedConversation
+                                                                userSelectedConversation[userId].push(messages.text); 
+                                                            } else {
+                                                                userSelectedConversation[userId] = [];
+                                                                userSelectedConversation[userId].push(messages.text);
+                                                            };
+                                                            isConversationSelected = true;
+                                                            userSelected.push(userId);
+                                                        }
+                                                    }
                                                 }
+                                            }
+                                        }
+                                    } 
+                                }
+                            } 
+                        } 
+                        // filter002 function
+                        let patternResult;  
+                        let pattern = /<@U04FCLTTECE>/;
+
+                        // see if the @someone happen in the text
+                        patternResult = pattern.test(messagesText);
+                        if (patternResult) {
+                            if (messages.subtype != "channel_join") { 
+                                let userId = '';
+                                let speakUser = '';
+                                // save the @someone as userId 
+                                let userSelected = [];
+                                let isUserSelected;
+
+                                for (const user of userList) {
+                                userId = user.id;
+                                speakUser = messages.user;
+                                isUserSelected = userSelected.includes(userId);
+                                
+                                    if (!isUserSelected) {
+                                        if (userId != speakUser) {
+                                            if (messagesText.includes(userId)) {
+                                                
+                                                if (userSelectedConversation002.hasOwnProperty(userId)) {
+                                                    // push messageText into userId, or add a new useId into userSelectedConversation
+                                                    userSelectedConversation002[userId].push(messages.text); 
+                                                } else {
+                                                    userSelectedConversation002[userId] = [];
+                                                    userSelectedConversation002[userId].push(messages.text);
+                                                };
+                                                userSelected.push(userId);
                                             }
                                         }
                                     }
                                 }
                             } 
                         }
-                    } 
-                } 
-                // filter002 function
-                let patternResult;  
-                let pattern = /<@U04FCLTTECE>/;
-
-                // see if the @someone happen in the text
-                patternResult = pattern.test(messagesText);
-                if (patternResult) {
-                    if (messages.subtype != "channel_join") { 
-                        let userId = '';
-                        let speakUser = '';
-                        // save the @someone as userId 
-                        let userSelected = [];
-                        let isUserSelected;
-
-                        for (const user of userList) {
-                        userId = user.id;
-                        speakUser = messages.user;
-                        isUserSelected = userSelected.includes(userId);
-                        
-                            if (!isUserSelected) {
-                                if (userId != speakUser) {
-                                    if (messagesText.includes(userId)) {
+                    }
+                    // thread conversation retrieving
+                    let threadTs;
+                    let patternResult;  
+                    let pattern = /<@U04FCLTTECE>/;
+                    
+                    if (messages.thread_ts !== undefined) {
+                        threadTs = messages.thread_ts;
+                        try {
+                            const threadConversation = await client.conversations.replies({
+                                channel: channelId,
+                                ts: threadTs,
+                                limit: 1000
+                            });
+                            for (const conversation of threadConversation.messages) {
+                                if (!tsSelected.includes(conversation.ts)) {
+                                    let threadPatternResult;
+                                    let conversationText = conversation.text;
+                                    threadPatternResult = pattern.test(conversation.text);
+                                    // record selected messages by ts 
+                                    tsSelected.push(conversation.ts);
+                                    if (threadPatternResult) {
+                                        let userId = '';
+                                        let speakUser = '';
+                                        // save the @someone as userId 
+                                        let userSelected = [];
+                                        let isUserSelected;
                                         
-                                        if (userSelectedConversation002.hasOwnProperty(userId)) {
-                                            // push messageText into userId, or add a new useId into userSelectedConversation
-                                            userSelectedConversation002[userId].push(messages.text); 
-                                        } else {
-                                            userSelectedConversation002[userId] = [];
-                                            userSelectedConversation002[userId].push(messages.text);
-                                        };
-                                        userSelected.push(userId);
-                                    }
-                                }
-                            }
-                        }
-                    } 
-                }
 
-                // thread conversation retrieving
-                let threadTs;
-                if (messages.thread_ts !== undefined) {
-                    threadTs = messages.thread_ts;
-                    try {
-                        const threadConversation = await client.conversations.replies({
-                            channel: channelId,
-                            ts: threadTs,
-                            limit: 1000
-                        });
-                        for (const conversation of threadConversation.messages) {
-                            if (conversation.subtype == undefined) {
-                                let threadPatternResult;
-                                let conversationText = conversation.text;
-                                threadPatternResult = pattern.test(conversation.text);
-                                if (threadPatternResult) {
-
-                                    let userId = '';
-                                    let speakUser = '';
-                                    // save the @someone as userId 
-                                    let userSelected = [];
-                                    let isUserSelected;
-            
-                                    for (const user of userList) {
-                                    userId = user.id;
-                                    speakUser = conversation.user;
-                                    isUserSelected = userSelected.includes(userId);
-                                    
-                                        if (!isUserSelected) {
-                                            if (userId != speakUser) {
-                                                if (conversationText.includes(userId)) {
-                                                    if (userSelectedConversation002.hasOwnProperty(userId)) {
-                                                        // push messageText into userId, or add a new useId into userSelectedConversation
-                                                        userSelectedConversation002[userId].push(conversationText); 
-                                                    } else {
-                                                        userSelectedConversation002[userId] = [];
-                                                        userSelectedConversation002[userId].push(conversationText);
-                                                    };
-                                                    userSelected.push(userId);
+                                        for (const user of userList) {
+                                        userId = user.id;
+                                        speakUser = conversation.user;
+                                        isUserSelected = userSelected.includes(userId);
+                                            if (!isUserSelected) {
+                                                if (userId != speakUser) {
+                                                    if (conversationText.includes(userId)) {
+                                                        if (userSelectedConversation002.hasOwnProperty(userId)) {
+                                                            // push messageText into userId, or add a new useId into userSelectedConversation
+                                                            userSelectedConversation002[userId].push(conversationText); 
+                                                        } else {
+                                                            userSelectedConversation002[userId] = [];
+                                                            userSelectedConversation002[userId].push(conversationText);
+                                                        };
+                                                        userSelected.push(userId);
+                                                        
+                                                    }
                                                 }
                                             }
                                         }
                                     }
                                 }
+                                
                             }
                         }
+                        catch (error) {
+                            console.error(error);
+                        }
                     }
-                    catch (error) {
-                        console.error(error);
-                    }
+                    
                 }
-            }
-            if (!conversationHistoryResult.response_metadata || !conversationHistoryResult.response_metadata.next_cursor) {
-                break;
-            }
-    
-            cursor = conversationHistoryResult.response_metadata.next_cursor;
+                if (!conversationHistoryResult.response_metadata || !conversationHistoryResult.response_metadata.next_cursor) {
+                    break;
+                }
+                cursor = conversationHistoryResult.response_metadata.next_cursor;
             }    
         }
         catch (error) {
@@ -300,7 +312,8 @@ async function asyncFunc() {
     // await getUserList();
     // await findConversation();
     // await epicWriteIn();
-    modifyEpic();
+    // modifyEpic();
+    serverSetting();
 };
 
 asyncFunc();
