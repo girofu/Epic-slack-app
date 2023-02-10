@@ -5,7 +5,7 @@ const userAddressAndId = require("../userAddressAndId.json");
 const fs = require('fs');
 
 
-export function epicWriteIn () {
+export async function epicWriteIn () {
     let userListWithRawEpic = userList;
     for (const user of userListWithRawEpic) {
         // console.log(user);

@@ -1,9 +1,8 @@
 
 import * as dotenv from 'dotenv' // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
-// import {getUserList} from "./getUserList";
+import {getUserList} from "./getUserList";
 import {modifyEpic} from "./modifyEpic";
 // import {epicWriteIn} from "./epicWriteIn";
-import {serverSetting} from "./api";
 dotenv.config()
 const express = require('express');
 
@@ -14,7 +13,8 @@ const http = require('http');
 const userAddressAndId = require("../userAddressAndId.json");
 const userList = require("../userList.json");
 const userSelectedConversation = require("../userSelectedConversationObject.json");
-// const userSelectedConversation002 = require("../userSelectedConversationObject002.json");
+const tsSelected = require("../tsSelectedJson.json");
+const userSelectedConversation002 = require("../userSelectedConversationObject002.json");
 require('dotenv').config();
 
 
@@ -49,10 +49,13 @@ var emojiFilter = [];
 const retrieveingTime = new Date();
 const retrieveingTimeStamp = retrieveingTime.setDate();
 
+// conversation selected was record by ts in this array
+// let tsSelected = [];
+
 
 // Find conversation ID using the conversations.list method
 async function findConversation(name) {
-    let userSelectedConversation002 = {};
+    // let userSelectedConversation002 = {};
     try {
         let cursor;
         var channelListId = [];
@@ -100,7 +103,7 @@ async function findConversation(name) {
                 });
                 // console.log(conversationHistoryResult);
 
-                let tsSelected = [];
+                
                 // for loop conversations here
                 for (const messages of conversationHistoryResult.messages) {
                     
@@ -301,7 +304,20 @@ async function findConversation(name) {
         if (err) {
             console.error(err);
         } else {
-            console.log('數據已成功寫入檔案');
+            console.log('userSelectedConversationJson002已成功寫入檔案');
+        }
+    });
+
+    // make the console.log result to JSON file
+    let tsSelectedJson;
+    tsSelectedJson = JSON.stringify(tsSelected)
+
+    // write the console.log to file
+    fs.writeFile('tsSelectedJson.json', tsSelectedJson, (err) => {
+        if (err) {
+            console.error(err);
+        } else {
+            console.log('tsSelectedJson已成功寫入檔案');
         }
     });
 
@@ -310,10 +326,10 @@ async function findConversation(name) {
 
 async function asyncFunc() {
     // await getUserList();
-    // await findConversation();
+    await findConversation();
     // await epicWriteIn();
     // modifyEpic();
-    serverSetting();
+    
 };
 
 asyncFunc();
