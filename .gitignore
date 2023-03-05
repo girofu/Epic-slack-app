@@ -1,6 +1,6 @@
 constants.js
 .env
-# node_modules/
+node_modules/
 backup20230304/
 
 # userList.json
