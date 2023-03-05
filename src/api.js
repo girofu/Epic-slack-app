@@ -108,7 +108,7 @@ function serverSetting() {
     //         }
     // });
 
-    appForUser.get('/api/json/users/:address/name', (req, res) => {
+    appForUser.get('/api/json/users/by-address/:address/name', (req, res) => {
         res.set('Access-Control-Allow-Origin', '*');
         // 取得json檔的資料
         const data = require('../userListWithEpic.json');
@@ -125,7 +125,7 @@ function serverSetting() {
             }
     });
 
-    appForUser.get('/api/json/users/:address/real_name', (req, res) => {
+    appForUser.get('/api/json/users/by-address/:address/real_name', (req, res) => {
         res.set('Access-Control-Allow-Origin', '*');
         // 取得json檔的資料
         const data = require('../userListWithEpic.json');
@@ -142,7 +142,7 @@ function serverSetting() {
             }
     });
 
-    appForUser.get('/api/json/users/:address/epic', (req, res) => {
+    appForUser.get('/api/json/users/by-address/:address/epic', (req, res) => {
         res.set('Access-Control-Allow-Origin', '*');
         // 取得json檔的資料
         const data = require('../userListWithEpic.json');
@@ -159,7 +159,7 @@ function serverSetting() {
             }
     });
 
-    appForUser.get('/api/json/users/:address/epic002', (req, res) => {
+    appForUser.get('/api/json/users/by-address/:address/epic002', (req, res) => {
         res.set('Access-Control-Allow-Origin', '*');
         // 取得json檔的資料
         const data = require('../userListWithEpic.json');
@@ -167,6 +167,23 @@ function serverSetting() {
         const address = req.params.address;
         // 尋找使用者
         const user = data.find(user => user.address === address);
+        // 將資料回傳給使用者
+        if (user) {
+            res.json({ epic002: user.epic002 });
+            } else {
+            // 否則回傳錯誤訊息
+            res.status(404).json({ error: 'User not found' });
+            }
+    });
+
+    appForUser.get('/api/json/users/by-id/:id/epic002', (req, res) => {
+        res.set('Access-Control-Allow-Origin', '*');
+        // 取得json檔的資料
+        const data = require('../userListWithEpic.json');
+        // 取得參數
+        const id = req.params.id;
+        // 尋找使用者
+        const user = data.find(user => user.id === id);
         // 將資料回傳給使用者
         if (user) {
             res.json({ epic002: user.epic002 });
