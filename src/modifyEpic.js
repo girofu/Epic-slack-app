@@ -86,7 +86,7 @@ export async function modifyEpic() {
        if (err) {
            console.error(err);
        } else {
-           console.log('數據已成功寫入檔案');
+           console.log('modifyEpic finished');
        }
    }); 
 }

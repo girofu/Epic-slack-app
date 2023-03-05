@@ -32,7 +32,7 @@ export async function epicWriteIn () {
         if (err) {
             console.error(err);
         } else {
-            console.log('數據已成功寫入檔案');
+            console.log('epicWriteIn finished');
         }
     }); 
 
