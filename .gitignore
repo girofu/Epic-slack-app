@@ -1,12 +1,12 @@
 constants.js
 .env
-node_modules/
+# node_modules/
 backup20230304/
 
 # userList.json
 userSelectedConversationObject.json
 
-userAddressAndId.json
+# userAddressAndId.json
 # userListWithRawEpic.json
 # userListWithEpic.json
 # userSelectedConversationObject002.json
