@@ -47,8 +47,8 @@ var wordFilter = ["謝謝", "感謝", "感恩", "太棒", "讚", "thank you", "t
 var emojiFilter = [];
 
 const retrieveingTime = new Date();
-const retrieveingTimeStamp = retrieveingTime.getTime();
-const retrieveingTimeStampMinusOneDay = retrieveingTimeStamp - 86400;
+const retrieveingTimeStamp = retrieveingTime.getTime()/1000;
+const retrieveingTimeStampMinusOneDay = retrieveingTimeStamp - 604800;
 
 // conversation selected was record by ts in this array
 // let tsSelected = [];
