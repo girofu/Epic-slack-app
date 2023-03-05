@@ -1,4 +1,4 @@
-const userSelectedConversation = require("../userSelectedConversationObject.json")
+// const userSelectedConversation = require("../userSelectedConversationObject.json")
 const userListWithRawEpic = require("../userListWithRawEpic.json");
 const { ConsoleLogger } = require("@slack/logger");
 const fs = require('fs');
@@ -7,6 +7,7 @@ const fs = require('fs');
 
 export async function modifyEpic() {
     let userListWithEpic = userListWithRawEpic;
+    console.log("modifyEpic start");
 
     for (const user of userListWithRawEpic) {
         if (user.epic !== undefined) {

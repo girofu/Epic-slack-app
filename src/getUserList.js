@@ -27,7 +27,8 @@ let userList = [];
 // get user list in slack work space
 export async function getUserList() {
     // You probably want to use a database to store any user information ;)
-let usersStore = {};
+  let usersStore = {};
+  console.log("getUserList start");
 
   try {
     // Call the users.list method using the WebClient
@@ -79,7 +80,7 @@ let usersStore = {};
       if (err) {
           console.error(err);
       } else {
-          console.log('數據已成功寫入檔案');
+          console.log('userList is writed in.');
       }
   }); 
 };

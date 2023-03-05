@@ -7,6 +7,7 @@ const fs = require('fs');
 
 export async function epicWriteIn () {
     let userListWithRawEpic = userList;
+    console.log("epicWriteIn start")
     for (const user of userListWithRawEpic) {
         // console.log(user);
         // console.log(user.id);
