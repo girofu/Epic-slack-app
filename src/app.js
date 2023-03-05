@@ -2,7 +2,7 @@
 import * as dotenv from 'dotenv' // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
 import {getUserList} from "./getUserList";
 import {modifyEpic} from "./modifyEpic";
-// import {epicWriteIn} from "./epicWriteIn";
+import {epicWriteIn} from "./epicWriteIn";
 dotenv.config()
 const express = require('express');
 
@@ -325,10 +325,10 @@ async function findConversation(name) {
 }
 
 async function asyncFunc() {
-    // await getUserList();
+    await getUserList();
     await findConversation();
-    // await epicWriteIn();
-    // modifyEpic();
+    await epicWriteIn();
+    modifyEpic();
     
 };
 
