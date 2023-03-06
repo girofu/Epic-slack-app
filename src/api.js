@@ -202,18 +202,24 @@ function serverSetting() {
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": `<@${event.user}> give them more!`
+                "text": `<@${event.user}> 你的shoutout已發送!`
             },
             "accessory": {
               "type": "button",
               "text": {
                 "type": "plain_text",
-                "text": "Button",
+                "text": "查看成就背包",
                 "emoji": true
               },
               "value": "click_me_123",
+              "url": "https://picchu.io/da0/",
               "action_id": "first_button"
             }
+            },
+            {
+                "type": "image",
+                "image_url": "https://upload.cc/i1/2023/03/06/eB0yPT.png",
+                "alt_text": "inspiration"
             }
         ]});
         }
