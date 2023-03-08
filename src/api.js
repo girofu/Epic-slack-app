@@ -31,6 +31,8 @@ const schedule = require('node-schedule');
 function serverSetting() {
     appForUser.get('/api/json/users/:name/id', (req, res) => {
         res.set('Access-Control-Allow-Origin', '*');
+        // 清除快取並重新載入檔案
+        delete require.cache[require.resolve('../userListWithEpic.json')];
         // 取得json檔的資料
         const data = require('../userListWithEpic.json');
         // 取得參數
@@ -112,6 +114,8 @@ function serverSetting() {
 
     appForUser.get('/api/json/users/by-address/:address/name', (req, res) => {
         res.set('Access-Control-Allow-Origin', '*');
+        // 清除快取並重新載入檔案
+        delete require.cache[require.resolve('../userListWithEpic.json')];
         // 取得json檔的資料
         const data = require('../userListWithEpic.json');
         // 取得參數
@@ -129,6 +133,8 @@ function serverSetting() {
 
     appForUser.get('/api/json/users/by-address/:address/real_name', (req, res) => {
         res.set('Access-Control-Allow-Origin', '*');
+        // 清除快取並重新載入檔案
+        delete require.cache[require.resolve('../userListWithEpic.json')];
         // 取得json檔的資料
         const data = require('../userListWithEpic.json');
         // 取得參數
@@ -146,6 +152,8 @@ function serverSetting() {
 
     appForUser.get('/api/json/users/by-address/:address/epic', (req, res) => {
         res.set('Access-Control-Allow-Origin', '*');
+        // 清除快取並重新載入檔案
+        delete require.cache[require.resolve('../userListWithEpic.json')];
         // 取得json檔的資料
         const data = require('../userListWithEpic.json');
         // 取得參數
@@ -163,6 +171,9 @@ function serverSetting() {
 
     appForUser.get('/api/json/users/by-address/:address/epic002', (req, res) => {
         res.set('Access-Control-Allow-Origin', '*');
+        
+        // 清除快取並重新載入檔案
+        delete require.cache[require.resolve('../userListWithEpic.json')];
         // 取得json檔的資料
         const data = require('../userListWithEpic.json');
         // 取得參數
@@ -180,6 +191,9 @@ function serverSetting() {
 
     appForUser.get('/api/json/users/by-id/:id/epic002', (req, res) => {
         res.set('Access-Control-Allow-Origin', '*');
+        
+        // 清除快取並重新載入檔案
+        delete require.cache[require.resolve('../userListWithEpic.json')];
         // 取得json檔的資料
         const data = require('../userListWithEpic.json');
         // 取得參數
