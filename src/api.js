@@ -220,36 +220,76 @@ function serverSetting() {
     // subscribe to 'app_mention' event in your App config
     // need app_mentions:read and chat:write scopes
     app.event('app_mention', async ({ event, context, client, say }) => {
-        try {
+      try {
+        const permalink = await client.chat.getPermalink({
+            channel: event.channel,
+            message_ts: event.ts
+          });
+        
+          console.log(permalink.permalink);
+        ;
+        // say() sends a message to the channel where the event was triggered
         await say({"blocks": [
             {
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": `<@${event.user}> 你的shoutout已發送!`
-            },
-            "accessory": {
-              "type": "button",
-              "text": {
-                "type": "plain_text",
-                "text": "查看成就背包",
-                "emoji": true
-              },
-              "value": "click_me_123",
-              "url": "https://picchu.io/da0/",
-              "action_id": "first_button"
+                "text": `${event.text} by <@${event.user}>`
             }
             },
             {
+                "type": "actions",
+                "elements": [
+                    {
+                        "type": "button",
+                        "text": {
+                        "type": "plain_text",
+                        "emoji": true,
+                        "text": "來自這裡"
+                        },
+                        // "style": "danger",
+                        "value": "click_me_123",
+                        "url": `${permalink.permalink}`
+                    },
+                    {
+                        "type": "button",
+                        "text": {
+                        "type": "plain_text",
+                        "emoji": true,
+                        "text": "成就背包"
+                        },
+                        "style": "danger",
+                        "value": "click_me_123",
+                        "url": "https://picchu.io/da0/"
+                    },
+                    {
+                        "type": "button",
+                        "text": {
+                        "type": "plain_text",
+                        "emoji": true,
+                        "text": "社群功德值"
+                        },
+                        "style": "primary",
+                        "value": "click_me_123",
+                        "url": "https://g0v-tw.slack.com/archives/C03RAK46BEC"
+                    },
+                ]
+            },
+            {
                 "type": "image",
-                "image_url": "https://upload.cc/i1/2023/03/14/3IMkcZ.png",
-                "alt_text": "inspiration"
-            }
+                "title": {
+                    "type": "plain_text",
+                    "text": "image1",
+                    "emoji": true
+                },
+                "image_url": "https://i.postimg.cc/bJc1RDpq/tgs8k-ct2zg.gif",
+                "alt_text": "image1"
+            },
         ]});
-        }
-        catch (error) {
-        console.error(error);
-        }
+      }
+      catch (error) {
+      console.error(error);
+      }
     });
 
     app.event("app_mention", async ({ event, client, body, headers }) => {
