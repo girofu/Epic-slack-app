@@ -111,7 +111,7 @@ export async function selectConversation(name) {
                 
                 // for loop conversations here
                 for (const messages of conversationHistoryResult.messages) {
-                    
+
                     // retrieve text
                     var messagesText = messages.text;
                     let isConversationSelected = false;
@@ -153,10 +153,11 @@ export async function selectConversation(name) {
                                                             
                                                             if (userSelectedConversation.hasOwnProperty(userId)) {
                                                                 // push messageText into userId, or add a new useId into userSelectedConversation
-                                                                userSelectedConversation[userId].push(messages.text); 
+                                                                let newObject = {text: messages.text, user: messages.user, ts: messages.ts, channel: channelId};
+                                                                userSelectedConversation[userId].push(newObject); 
                                                             } else {
-                                                                userSelectedConversation[userId] = [];
-                                                                userSelectedConversation[userId].push(messages.text);
+                                                                let newObject = {text: messages.text, user: messages.user, ts: messages.ts, channel: channelId};
+                                                                userSelectedConversation[userId].push(newObject); 
                                                             };
                                                             isConversationSelected = true;
                                                             userSelected.push(userId);
@@ -193,11 +194,13 @@ export async function selectConversation(name) {
                                             if (messagesText.includes(userId)) {
                                                 
                                                 if (userSelectedConversation002.hasOwnProperty(userId)) {
-                                                    // push messageText into userId, or add a new useId into userSelectedConversation
-                                                    userSelectedConversation002[userId].push(messages.text); 
+                                                    // add message user id and messageTest together as an object into userSelectedConversation002
+                                                    let newObject = {text: messages.text, user: messages.user, ts: messages.ts, channel: channelId};
+                                                    userSelectedConversation002[userId].push(newObject);
                                                 } else {
                                                     userSelectedConversation002[userId] = [];
-                                                    userSelectedConversation002[userId].push(messages.text);
+                                                    let newObject = {text: messages.text, user: messages.user, ts: messages.ts, channel: channelId};
+                                                    userSelectedConversation002[userId].push(newObject);
                                                 };
                                                 userSelected.push(userId);
                                             }
@@ -244,10 +247,11 @@ export async function selectConversation(name) {
                                                     if (conversationText.includes(userId)) {
                                                         if (userSelectedConversation002.hasOwnProperty(userId)) {
                                                             // push messageText into userId, or add a new useId into userSelectedConversation
-                                                            userSelectedConversation002[userId].push(conversationText); 
+                                                            let newObject = {text: messages.text, user: messages.user, ts: messages.ts, channel: channelId};
+                                                            userSelectedConversation002[userId].push(newObject); 
                                                         } else {
-                                                            userSelectedConversation002[userId] = [];
-                                                            userSelectedConversation002[userId].push(conversationText);
+                                                            let newObject = {text: messages.text, user: messages.user, ts: messages.ts, channel: channelId};
+                                                            userSelectedConversation002[userId].push(newObject);
                                                         };
                                                         userSelected.push(userId);
                                                         
@@ -277,7 +281,7 @@ export async function selectConversation(name) {
         }
     }
 
-    // console.log(userSelectedConversation);
+    // console.log(userSelectedConversation002);
     
 
     // for (const user of userAddressAndId) {
