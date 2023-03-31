@@ -1,7 +1,9 @@
-import * as dotenv from 'dotenv' // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
-dotenv.config()
+// import * as dotenv from 'dotenv' // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
+
 const { App } = require("@slack/bolt");
 const fs = require('fs');
+const dotenv = require('dotenv');
+dotenv.config()
 
 // critial important!! use config to set this information on heroku. and use process.env. to get them
 const app = new App({
@@ -58,6 +60,8 @@ export async function getUserList() {
     usersArray.forEach(function(user){
       // Key user info on their unique user ID
       userIdInList = user["id"];
+      console.log(user);
+      
 
       // Store the entire user object (you may not need all of the info)
       usersStore[userIdInList] = user["id"];
@@ -66,8 +70,10 @@ export async function getUserList() {
         name: user["name"],
         real_name: user["real_name"],
       })
+
        
     });
+    // console.log(userIdInList);
     // console.log(usersStore); 
   }
 

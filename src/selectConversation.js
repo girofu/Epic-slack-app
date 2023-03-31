@@ -55,9 +55,9 @@ const retrieveingTimeStampMinusOneDay = retrieveingTimeStamp - 604800;
 
 
 // Find conversation ID using the conversations.list method
-export async function findConversation(name) {
+export async function selectConversation(name) {
     // let userSelectedConversation002 = {};
-    console.log("findConversation start");
+    console.log("selectConversation start");
     try {
         let cursor;
         var channelListId = [];

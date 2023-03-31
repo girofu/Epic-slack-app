@@ -3,7 +3,7 @@ import * as dotenv from 'dotenv' // see https://github.com/motdotla/dotenv#how-d
 import {getUserList} from "./getUserList";
 import {modifyEpic} from "./modifyEpic";
 import {epicWriteIn} from "./epicWriteIn";
-import {findConversation} from "./selectConversation";
+import {selectConversation} from "./selectConversation";
 dotenv.config()
 const express = require('express');
 
@@ -17,9 +17,9 @@ const retrieveingTimeStamp = retrieveingTime.setDate();
 
 async function asyncFunc() {
     await getUserList();
-    await findConversation();
-    await epicWriteIn();
-    await modifyEpic();
+    // await selectConversation();
+    // await epicWriteIn();
+    // await modifyEpic();
 };
 
 asyncFunc();
