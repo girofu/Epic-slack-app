@@ -48,7 +48,7 @@ var emojiFilter = [];
 
 const retrieveingTime = new Date();
 const retrieveingTimeStamp = retrieveingTime.getTime()/1000;
-const retrieveingTimeStampMinusOneDay = retrieveingTimeStamp - 604800;
+const retrieveingTimeStampStartDay = retrieveingTimeStamp - 604800;
 
 // conversation selected was record by ts in this array
 // let tsSelected = [];
@@ -102,7 +102,7 @@ export async function selectConversation(name) {
                     latest: retrieveingTimeStamp,
 
                     // 20221023 da0 anniversary: 1666454091.198649
-                    oldest: retrieveingTimeStampMinusOneDay,
+                    oldest: retrieveingTimeStampStartDay,
                     limit: 1000,
                     cursor: cursor
                 });
@@ -111,7 +111,7 @@ export async function selectConversation(name) {
                 
                 // for loop conversations here
                 for (const messages of conversationHistoryResult.messages) {
-                    
+
                     // retrieve text
                     var messagesText = messages.text;
                     let isConversationSelected = false;
@@ -120,55 +120,58 @@ export async function selectConversation(name) {
                         // record selected messages by ts 
                         tsSelected.push(messages.ts);
                         // filter the conversation with positive compliment
-                        for (var i = 0; i < wordFilter.length; i += 1) {
-                            if (!isConversationSelected) {
-                                var isPositive = messagesText.includes(wordFilter[i]);
-                                if (isPositive) {
-                                    let patternResult;  
-                                    let pattern = /<@/;
+                        // for (var i = 0; i < wordFilter.length; i += 1) {
+                        //     if (!isConversationSelected) {
+                        //         var isPositive = messagesText.includes(wordFilter[i]);
+                        //         if (isPositive) {
+                        //             let patternResult;  
+                        //             let pattern = /<@/;
 
-                                    // see if the @someone happen in the text
-                                    patternResult = pattern.test(messagesText);
-                                    if (patternResult) {
-                                        if (messages.subtype != "channel_join") { 
-                                            let userId = '';
-                                            let speakUser = '';
-                                            // save the @someone as userId 
-                                            let n;
-                                            // console.log(messages.blocks[0].elements[0].elements);
-                                            // console.log(messages.blocks[0].elements[0].elements.length);
-                                            // console.log(messages.reactions[0].name)
-                                            let userSelected = [];
-                                            let isUserSelected;
+                        //             // see if the @someone happen in the text
+                        //             patternResult = pattern.test(messagesText);
+                        //             if (patternResult) {
+                        //                 if (messages.subtype != "channel_join") { 
+                        //                     let userId = '';
+                        //                     let speakUser = '';
+                        //                     // save the @someone as userId 
+                        //                     let n;
+                        //                     // console.log(messages.blocks[0].elements[0].elements);
+                        //                     // console.log(messages.blocks[0].elements[0].elements.length);
+                        //                     // console.log(messages.reactions[0].name)
+                        //                     let userSelected = [];
+                        //                     let isUserSelected;
 
-                                            for (n = 0; messages.blocks[0].elements[0].elements.length > n ; n += 1) {
-                                                // console.log(messages.blocks[0].elements[0].elements[n].user_id);
-                                                userId = messages.blocks[0].elements[0].elements[n].user_id;
-                                                speakUser = messages.user;
-                                                isUserSelected = userSelected.includes(userId);
+                        //                     for (n = 0; messages.blocks[0].elements[0].elements.length > n ; n += 1) {
+                        //                         // console.log(messages.blocks[0].elements[0].elements[n].user_id);
+                        //                         userId = messages.blocks[0].elements[0].elements[n].user_id;
+                        //                         speakUser = messages.user;
+                        //                         isUserSelected = userSelected.includes(userId);
                                             
-                                                if (!isUserSelected) {
-                                                    if (userId != speakUser) {
-                                                        if (userId != undefined) {
+                        //                         if (!isUserSelected) {
+                        //                             if (userId != speakUser) {
+                        //                                 if (userId != undefined) {
                                                             
-                                                            if (userSelectedConversation.hasOwnProperty(userId)) {
-                                                                // push messageText into userId, or add a new useId into userSelectedConversation
-                                                                userSelectedConversation[userId].push(messages.text); 
-                                                            } else {
-                                                                userSelectedConversation[userId] = [];
-                                                                userSelectedConversation[userId].push(messages.text);
-                                                            };
-                                                            isConversationSelected = true;
-                                                            userSelected.push(userId);
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    } 
-                                }
-                            } 
-                        } 
+                        //                                     if (userSelectedConversation.hasOwnProperty(userId)) {
+                        //                                         // push messageText into userId, or add a new useId into userSelectedConversation
+                        //                                         let newObject = {};
+                        //                                         newObject = {text: messages.text, user: messages.user, ts: messages.ts, channel: channelId};
+                        //                                         userSelectedConversation[userId].push(newObject); 
+                        //                                     } else {
+                        //                                         let newObject = {};
+                        //                                         newObject = {text: messages.text, user: messages.user, ts: messages.ts, channel: channelId};
+                        //                                         userSelectedConversation[userId].push(newObject); 
+                        //                                     };
+                        //                                     isConversationSelected = true;
+                        //                                     userSelected.push(userId);
+                        //                                 }
+                        //                             }
+                        //                         }
+                        //                     }
+                        //                 }
+                        //             } 
+                        //         }
+                        //     } 
+                        // } 
                         // filter002 function
                         let patternResult;  
                         let pattern = /<@U04FCLTTECE>/;
@@ -193,11 +196,15 @@ export async function selectConversation(name) {
                                             if (messagesText.includes(userId)) {
                                                 
                                                 if (userSelectedConversation002.hasOwnProperty(userId)) {
-                                                    // push messageText into userId, or add a new useId into userSelectedConversation
-                                                    userSelectedConversation002[userId].push(messages.text); 
+                                                    // add message user id and messageTest together as an object into userSelectedConversation002
+                                                    let newObject = {};
+                                                    newObject = {text: messages.text, user: messages.user, ts: messages.ts, channel: channelId};
+                                                    userSelectedConversation002[userId].push(newObject);
                                                 } else {
                                                     userSelectedConversation002[userId] = [];
-                                                    userSelectedConversation002[userId].push(messages.text);
+                                                    let newObject = {};
+                                                    newObject = {text: messages.text, user: messages.user, ts: messages.ts, channel: channelId};
+                                                    userSelectedConversation002[userId].push(newObject);
                                                 };
                                                 userSelected.push(userId);
                                             }
@@ -244,12 +251,21 @@ export async function selectConversation(name) {
                                                     if (conversationText.includes(userId)) {
                                                         if (userSelectedConversation002.hasOwnProperty(userId)) {
                                                             // push messageText into userId, or add a new useId into userSelectedConversation
-                                                            userSelectedConversation002[userId].push(conversationText); 
+                                                            let newObject = {};
+                                                            newObject = {text: conversation.text, user: conversation.user, ts: conversation.ts, channel: channelId};
+                                                            userSelectedConversation002[userId].push(newObject); 
+                                                            // console.log(newObject)
                                                         } else {
+                                                            let newObject = {};
+                                                            newObject = {text: conversation.text, user: conversation.user, ts: conversation.ts, channel: channelId};
                                                             userSelectedConversation002[userId] = [];
-                                                            userSelectedConversation002[userId].push(conversationText);
+                                                            userSelectedConversation002[userId].push(newObject);
+                                                            // console.log(newObject)
                                                         };
                                                         userSelected.push(userId);
+                                                        // console.log(userSelectedConversation002);
+                                                        console.log(userSelectedConversation002[userId]);
+ 
                                                         
                                                     }
                                                 }
@@ -277,7 +293,7 @@ export async function selectConversation(name) {
         }
     }
 
-    // console.log(userSelectedConversation);
+    // console.log(userSelectedConversation002);
     
 
     // for (const user of userAddressAndId) {
