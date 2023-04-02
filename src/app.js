@@ -17,9 +17,9 @@ const retrieveingTimeStamp = retrieveingTime.setDate();
 
 async function asyncFunc() {
     await getUserList();
-    // await selectConversation();
-    // await epicWriteIn();
-    // await modifyEpic();
+    await selectConversation();
+    await epicWriteIn();
+    await modifyEpic();
 };
 
 asyncFunc();

@@ -1,5 +1,7 @@
 # Epic-slack-app
-Retrieve selected conversations from slack, transfer these conversation to a prefered data objects and build api for others to retrieve the data.
+1. Retrieve selected conversations from slack, transfer these conversation to a prefered data objects.
+2. Build api for others to retrieve the data.
+3. establish a slack bot to react when the slackbot(shoutout) is mentioned.
 
 ## Dependencies
 This app uses the following dependencies:
@@ -21,7 +23,8 @@ SLACK_BOT_TOKEN=your_slack_bot_token_here
 SLACK_SIGNING_SECRET=your_slack_signing_secret_here
 ```
 ## Usage
-To run the app, use the command npm start.
+To run the app, use the command: node ./src/index.js
+To run the api, use the command: node ./src/index002.js
 
 ## Functions
 ### selectConversation(name)
