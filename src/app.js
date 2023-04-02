@@ -16,10 +16,10 @@ const retrieveingTime = new Date();
 const retrieveingTimeStamp = retrieveingTime.setDate();
 
 async function asyncFunc() {
-    // await getUserList();
+    await getUserList();
     await selectConversation();
-    // await epicWriteIn();
-    // await modifyEpic();
+    await epicWriteIn();
+    await modifyEpic();
 };
 
 asyncFunc();

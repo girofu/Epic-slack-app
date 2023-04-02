@@ -1,4 +1,4 @@
-// const userSelectedConversation = require("../userSelectedConversationObject.json")
+const userSelectedConversation = require("../userSelectedConversationObject.json")
 const userListWithRawEpic = require("../userListWithRawEpic.json");
 const { ConsoleLogger } = require("@slack/logger");
 const fs = require('fs');
@@ -17,7 +17,7 @@ export async function modifyEpic() {
 
             for (const epic of user.epic) {
                 
-                epicBotRemoved = epic.text.replaceAll("<@U04FCLTTECE>", "");
+                epicBotRemoved = epic.replaceAll("<@U04FCLTTECE>", "");
                 // find the pattern
 
                 newEpic = epicBotRemoved.replace(/<@.*?>/g , (match) => {
@@ -51,7 +51,7 @@ export async function modifyEpic() {
                 
                 // find the pattern
 
-                epic002BotRemoved = epic002.replaceAll("<@U04FCLTTECE>", "");
+                epic002BotRemoved = epic002.text.replaceAll("<@U04FCLTTECE>", "Shoutout");
 
                 newEpic002 = epic002BotRemoved.replace(/<@.*?>/g , (match) => {
                     // console.log(match)
@@ -61,18 +61,18 @@ export async function modifyEpic() {
                         if (userId === match) {
                             let userName = "<" + u.real_name + ">"; 
                             return userName;
-                            
                         }
                     // return match;
                     } 
                 });
                 
                 // console.log(newEpic002);
-                newEpics002.push(newEpic002);
+                epic002.text = newEpic002;
+                // newEpics002.push(newEpic002);
                 // console.log(newEpics002);
 
             }
-            user.epic002 = newEpics002;
+            // user.epic002 = newEpics002;
             console.log(user);
         }
         
