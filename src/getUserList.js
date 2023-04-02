@@ -60,7 +60,7 @@ export async function getUserList() {
     usersArray.forEach(function(user){
       // Key user info on their unique user ID
       userIdInList = user["id"];
-      console.log(user);
+      // console.log(user);
       
 
       // Store the entire user object (you may not need all of the info)
