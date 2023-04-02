@@ -13,6 +13,7 @@ This app uses the following dependencies:
 * http
 ## Installation
 Clone the repository: git clone https://github.com/girofu/Epic-slack-app.git
+
 Install dependencies: npm install
 ## Configuration
 This app uses environment variables to store sensitive information. Create a .env file in the root directory of the project and add the following:
