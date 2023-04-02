@@ -17,7 +17,7 @@ export async function modifyEpic() {
 
             for (const epic of user.epic) {
                 
-                epicBotRemoved = epic.replaceAll("<@U04FCLTTECE>", "");
+                epicBotRemoved = epic.text.replaceAll("<@U04FCLTTECE>", "");
                 // find the pattern
 
                 newEpic = epicBotRemoved.replace(/<@.*?>/g , (match) => {

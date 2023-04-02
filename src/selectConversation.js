@@ -47,8 +47,8 @@ var wordFilter = ["謝謝", "感謝", "感恩", "太棒", "讚", "thank you", "t
 var emojiFilter = [];
 
 const retrieveingTime = new Date();
-const retrieveingTimeStamp = retrieveingTime.getTime()/1000;
-const retrieveingTimeStampMinusOneDay = retrieveingTimeStamp - 604800;
+const retrieveingTimeStamp = retrieveingTime.getTime()/1000 - 604800*90;
+const retrieveingTimeStampStartDay = retrieveingTimeStamp - 604800*180;
 
 // conversation selected was record by ts in this array
 // let tsSelected = [];
@@ -102,7 +102,7 @@ export async function selectConversation(name) {
                     latest: retrieveingTimeStamp,
 
                     // 20221023 da0 anniversary: 1666454091.198649
-                    oldest: retrieveingTimeStampMinusOneDay,
+                    oldest: retrieveingTimeStampStartDay,
                     limit: 1000,
                     cursor: cursor
                 });
