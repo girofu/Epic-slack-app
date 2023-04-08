@@ -36,6 +36,8 @@ const schedule = require('node-schedule');
 
 const messageBlocks = [];
 
+let currentGifUrl;
+
 function serverSetting() {
     appForUser.get('/api/json/users/:name/id', (req, res) => {
         res.set('Access-Control-Allow-Origin', '*');
@@ -226,7 +228,8 @@ function serverSetting() {
             message_ts: event.ts
           });
         
-          console.log(permalink.permalink);
+        console.log(permalink.permalink);
+        await fetchCatGif();
         ;
         // say() sends a message to the channel where the event was triggered
         await say({"blocks": [
@@ -282,7 +285,7 @@ function serverSetting() {
                     "text": "image1",
                     "emoji": true
                 },
-                "image_url": "https://i.postimg.cc/bJc1RDpq/tgs8k-ct2zg.gif",
+                "image_url": currentGifUrl,
                 "alt_text": "image1"
             },
         ]});
@@ -392,5 +395,27 @@ function serverSetting() {
         console.log("資料上傳");
     });
 };
+
+async function fetchCatGif() {
+  const url = 'https://api.giphy.com/v1/gifs/random?api_key=UQjFBNNOWp8W2tC2st6Gcvv2u04Wo9Fh&tag=cat&rating=g';
+
+  try {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const data = await response.json();
+    const gifUrl = data.data.images.fixed_height.url;
+    currentGifUrl = gifUrl;
+    console.log(gifUrl);
+
+    return gifUrl;
+  } catch (error) {
+    console.error('There was a problem with the fetch operation:', error);
+    throw error;
+  }
+}
 
 serverSetting();
