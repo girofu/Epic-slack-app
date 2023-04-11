@@ -12,7 +12,7 @@ const fs = require('fs');
 const http = require('http');
 const userAddressAndId = require("../userAddressAndId.json");
 const userList = require("../userList.json");
-const userSelectedConversation = require("../userSelectedConversationObject.json");
+// const userSelectedConversation = require("../userSelectedConversationObject.json");
 const tsSelected = require("../tsSelectedJson.json");
 const userSelectedConversation002 = require("../userSelectedConversationObject002.json");
 require('dotenv').config();
@@ -53,6 +53,8 @@ const retrieveingTimeStampStartDay = retrieveingTimeStamp - 604800;
 // conversation selected was record by ts in this array
 // let tsSelected = [];
 
+var channelListId = [];
+var channelListIdName =[];
 
 // Find conversation ID using the conversations.list method
 export async function selectConversation(name) {
@@ -60,7 +62,6 @@ export async function selectConversation(name) {
     console.log("selectConversation start");
     try {
         let cursor;
-        var channelListId = [];
         while (true) {
             // Call the conversations.list method using the built-in WebClient
             const conversationListResult = await app.client.conversations.list({
@@ -74,6 +75,7 @@ export async function selectConversation(name) {
             for (const channel of conversationListResult.channels) {
                 if (channel.is_member) {
                     channelListId.push(channel.id);
+                    channelListIdName.push({id: channel.id, name:channel.name});
                     // console.log(channel.id);
                 }
             }
@@ -339,6 +341,18 @@ export async function selectConversation(name) {
             console.error(err);
         } else {
             console.log('tsSelectedJson已成功寫入檔案');
+        }
+    });
+
+    let channelNameJson;
+    channelNameJson = JSON.stringify(channelListIdName)
+
+    // write the console.log to file
+    fs.writeFile('channelName.json', channelNameJson, (err) => {
+        if (err) {
+            console.error(err);
+        } else {
+            console.log('channelNameJson已成功寫入檔案');
         }
     });
 

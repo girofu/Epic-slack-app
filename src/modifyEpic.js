@@ -1,5 +1,9 @@
-const userSelectedConversation = require("../userSelectedConversationObject.json")
+import { channel } from "diagnostics_channel";
+
+// const userSelectedConversation = require("../userSelectedConversationObject.json")
 const userListWithRawEpic = require("../userListWithRawEpic.json");
+const userList = require("../userList.json");
+const channelName = require("../channelName.json");
 const { ConsoleLogger } = require("@slack/logger");
 const fs = require('fs');
 
@@ -44,12 +48,16 @@ export async function modifyEpic() {
 
         if (user.epic002 !== undefined) {
             let newEpics002 = [];
+            let epic002User;
+            let newEpic002User;
             let newEpic002;
             let epic002BotRemoved;
+            let targetStr;
             // modify epic002
             for (const epic002 of user.epic002) {
                 
                 // find the pattern
+                epic002User = epic002.user
 
                 epic002BotRemoved = epic002.text.replaceAll("<@U04FCLTTECE>", "Shoutout");
 
@@ -73,10 +81,33 @@ export async function modifyEpic() {
 
             }
             // user.epic002 = newEpics002;
-            console.log(user);
+            // console.log(user);
         }
         
     }
+
+    userListWithEpic.forEach((item) => {
+        if (item.epic002) {
+            console.log("item.epic002 is true");
+          item.epic002 = item.epic002.map((epic) => {
+            const userObj = userList.find((user) => user.id === epic.user);
+            const channel = channelName.find((channel) => channel.id === epic.channel); 
+            console.log(userObj);
+            if (userObj && channel) {
+              return {
+                ...epic,
+                user: userObj.real_name,
+                channel: channel.name,
+              };
+            } else {
+              return epic;
+            }
+          });
+        }
+      });
+
+      
+
    // make the console.log result to JSON file
    
    let userListWithEpicJson; 

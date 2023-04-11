@@ -1,4 +1,4 @@
-const userSelectedConversation = require("../userSelectedConversationObject.json");
+// const userSelectedConversation = require("../userSelectedConversationObject.json");
 const userSelectedConversation002 = require("../userSelectedConversationObject002.json");
 const userList = require("../userList.json");
 const userAddressAndId = require("../userAddressAndId.json");
@@ -13,9 +13,9 @@ export async function epicWriteIn () {
         // console.log(user.id);
         let users = user.id;
         // console.log(userSelectedConversation[users]);
-        let userEpic = userSelectedConversation[users];
+        // let userEpic = userSelectedConversation[users];
         let userEpic002 = userSelectedConversation002[users];
-        user["epic"] = userEpic;
+        // user["epic"] = userEpic;
         user["epic002"] = userEpic002
         // console.log(userList);
         const UserIdFromGoogleSheet = userAddressAndId.find(u => u[3] === users);
