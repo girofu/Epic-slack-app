@@ -248,7 +248,7 @@ function serverSetting() {
                         "text": {
                         "type": "plain_text",
                         "emoji": true,
-                        "text": "來自這裡"
+                        "text": "這句話來自這裡 Original message"
                         },
                         // "style": "danger",
                         "value": "click_me_123",
@@ -259,23 +259,23 @@ function serverSetting() {
                         "text": {
                         "type": "plain_text",
                         "emoji": true,
-                        "text": "成就背包"
-                        },
-                        "style": "danger",
-                        "value": "click_me_123",
-                        "url": "https://picchu.io/da0/"
-                    },
-                    {
-                        "type": "button",
-                        "text": {
-                        "type": "plain_text",
-                        "emoji": true,
-                        "text": "社群功德值"
+                        "text": "翻看成就背包 See the shoutouts"
                         },
                         "style": "primary",
                         "value": "click_me_123",
-                        "url": "https://g0v-tw.slack.com/archives/C03RAK46BEC"
+                        "url": "https://picchu.io/da0/"
                     },
+                    // {
+                    //     "type": "button",
+                    //     "text": {
+                    //     "type": "plain_text",
+                    //     "emoji": true,
+                    //     "text": "社群功德值"
+                    //     },
+                    //     "style": "primary",
+                    //     "value": "click_me_123",
+                    //     "url": "https://g0v-tw.slack.com/archives/C03RAK46BEC"
+                    // },
                 ]
             },
             {
