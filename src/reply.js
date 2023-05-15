@@ -228,12 +228,12 @@ function botReply() {
     });
 
     (async () => {
-        await app.start(process.env.PORT || 3000);
+        await app.start(process.env.PORT1 || 3000);
         console.log('⚡️ reply app started');
-        console.log(process.env.PORT)
+        console.log(process.env.PORT1)
       })();
 
-    let port = process.env.PORT;
+    let port = process.env.PORT1;
     if (port == null || port == "") {
         port = 3000;
     }

@@ -220,12 +220,12 @@ function serverSetting() {
     });
 
     (async () => {
-        await app.start(process.env.PORT || 8000);
+        await app.start(process.env.PORT2 || 8000);
         console.log('⚡️ api app started');
-        console.log(process.env.PORT)
+        console.log(process.env.PORT2)
       })();
 
-    let port = process.env.PORT;
+    let port = process.env.PORT2;
     if (port == null || port == "") {
         port = 8000;
     }
