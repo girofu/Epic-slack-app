@@ -194,7 +194,7 @@ export async function selectConversation(name) {
                                 isUserSelected = userSelected.includes(userId);
                                 
                                     if (!isUserSelected) {
-                                        if (userId != speakUser) {
+                                        if (userId != speakUser && speakUser != "U04FCLTTECE") {
                                             if (messagesText.includes(userId)) {
                                                 
                                                 if (userSelectedConversation002.hasOwnProperty(userId)) {
@@ -235,7 +235,7 @@ export async function selectConversation(name) {
                                     let conversationText = conversation.text;
                                     threadPatternResult = pattern.test(conversation.text);
                                     // record selected messages by ts 
-                                    tsSelected.push(conversation.ts);
+
                                     if (threadPatternResult) {
                                         let userId = '';
                                         let speakUser = '';
@@ -249,7 +249,7 @@ export async function selectConversation(name) {
                                         speakUser = conversation.user;
                                         isUserSelected = userSelected.includes(userId);
                                             if (!isUserSelected) {
-                                                if (userId != speakUser) {
+                                                if (userId != speakUser && speakUser != "U04FCLTTECE") {
                                                     if (conversationText.includes(userId)) {
                                                         if (userSelectedConversation002.hasOwnProperty(userId)) {
                                                             // push messageText into userId, or add a new useId into userSelectedConversation
@@ -265,6 +265,7 @@ export async function selectConversation(name) {
                                                             // console.log(newObject)
                                                         };
                                                         userSelected.push(userId);
+                                                        tsSelected.push(conversation.ts);
                                                         // console.log(userSelectedConversation002);
                                                         console.log(userSelectedConversation002[userId]);
  

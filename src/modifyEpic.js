@@ -55,6 +55,7 @@ export async function modifyEpic() {
             let targetStr;
             // modify epic002
             for (const epic002 of user.epic002) {
+                if (epic002.text) {
                 
                 // find the pattern
                 epic002User = epic002.user
@@ -78,6 +79,7 @@ export async function modifyEpic() {
                 epic002.text = newEpic002;
                 // newEpics002.push(newEpic002);
                 // console.log(newEpics002);
+                }
 
             }
             // user.epic002 = newEpics002;

@@ -40,6 +40,7 @@ const client = redis.createClient({
 Promise.promisifyAll(client); // 在 redis 客戶端對象上使用 promisifyAll
 
 
+
 client.on('connect', function() {
     console.log('connected to Redis');
 });
@@ -109,14 +110,17 @@ client.on("error", function(error) {
 // };
 
 async function testClient() {
+    // Connect to Redis，**critical step that is not shown on the tutorial
+    await client.connect();
+
     try {
         console.log("Adding value to the cache");
-        await client.setAsync("myKey", "myValue");
+        await client.set("myKey", "myValue");
         console.log("Reading value back:");
-        console.log(await client.getAsync("myKey"));
+        console.log(await client.get("myKey"));
         console.log("Pinging the cache");
-        console.log(await client.pingAsync());
-        await client.flushdbAsync();
+        console.log(await client.ping());
+        // await client.flushdbAsync();
     } catch (error) {
         console.error("Error in testClient: ", error);
     }

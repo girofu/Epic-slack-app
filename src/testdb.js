@@ -1,5 +1,6 @@
 require("dotenv").config();
 const redis = require("redis");
+var Promise = require("bluebird");
 
 // Environment variables for cache
 const cacheHostName = process.env.AZURE_CACHE_FOR_REDIS_HOST_NAME;
@@ -7,6 +8,9 @@ const cachePassword = process.env.AZURE_CACHE_FOR_REDIS_ACCESS_KEY;
 
 if(!cacheHostName) throw Error("AZURE_CACHE_FOR_REDIS_HOST_NAME is empty")
 if(!cachePassword) throw Error("AZURE_CACHE_FOR_REDIS_ACCESS_KEY is empty")
+
+
+
 
 async function testCache() {
 
@@ -47,4 +51,32 @@ async function testCache() {
     return "Done"
 }
 
-testCache().then((result) => console.log(result)).catch(ex => console.log(ex));
+async function testClient() {
+    const client = redis.createClient({
+        url: `rediss://${process.env.REDISHOSTNAME}:${process.env.REDISPORT}`,
+        password: process.env.REDISKEY
+    });
+    Promise.promisifyAll(client);
+
+    // Connect to Redis，**critical step that is not shown on the tutorial
+    await client.connect();
+
+    try {
+        console.log("Adding value to the cache");
+        await client.set("myKey", "myValue");
+        console.log("Reading value back:");
+        console.log(await client.get("myKey"));
+        console.log("Pinging the cache");
+        console.log(await client.ping());
+        // await client.flushdbAsync();
+    } catch (error) {
+        console.error("Error in testClient: ", error);
+    }
+     finally {
+        console.log("Closing the client");
+        await client.quit();
+    }
+};
+
+// testCache().then((result) => console.log(result)).catch(ex => console.log(ex));
+testClient().then((result) => console.log(result)).catch(ex => console.log(ex));
