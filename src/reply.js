@@ -112,16 +112,16 @@ function botReply() {
                     // },
                 ]
             },
-            // {
-            //     "type": "image",
-            //     "title": {
-            //         "type": "plain_text",
-            //         "text": "image1",
-            //         "emoji": true
-            //     },
-            //     "image_url": currentGifUrl,
-            //     "alt_text": "image1"
-            // },
+            {
+                "type": "image",
+                "title": {
+                    "type": "plain_text",
+                    "text": "image1",
+                    "emoji": true
+                },
+                "image_url": currentGifUrl,
+                "alt_text": "image1"
+            },
         ]});
         // make the console.log result to JSON file
         let triggeredPostsJson;
