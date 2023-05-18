@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv'
 require('dotenv').config();
 dotenv.config()
-
+const triggeredPosts = require("../triggeredPosts.json");
 let messageBlocksJson = require('../messageBlocks.json');
 
 const fs = require('fs');
