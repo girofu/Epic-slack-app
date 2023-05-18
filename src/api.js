@@ -408,22 +408,23 @@ function serverSetting() {
       });
     
 
-    (async () => {
-        await app.start(process.env.PORT || 8000);
-        console.log('⚡️ api app started');
-        console.log('reply app started');
-    })();
+        (async () => {
+            await app.start(process.env.PORT || 8000);
+            console.log('⚡️ api app started');
+            console.log('reply app started');
+        })();
 
-    let port = process.env.PORT;
-    if (port == null || port == "") {
-        port = 8000;
-    }
-        
-    appForUser.listen(port, () => {
-        console.log("資料上傳");
-    });
+        let port = process.env.PORT;
+        if (port == null || port == "") {
+            port = 8000;
+        }
+            
+        appForUser.listen(port, () => {
+            console.log("資料上傳");
+        });
+    };
   
-  async function fetchCatGif() {
+async function fetchCatGif() {
     const url = 'https://api.giphy.com/v1/gifs/random?api_key=UQjFBNNOWp8W2tC2st6Gcvv2u04Wo9Fh&tag=dog&rating=g';
   
     try {
@@ -443,8 +444,8 @@ function serverSetting() {
       console.error('There was a problem with the fetch operation:', error);
       throw error;
     }
-    }
+}
 
-};
+
 
 serverSetting();
