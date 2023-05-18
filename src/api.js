@@ -226,7 +226,7 @@ function serverSetting() {
     // need app_mentions:read and chat:write scopes
     app.event('app_mention', async ({ event, context, client, say }) => {
         try {
-          const postId = event.thread_ts || event.ts; // 使用 thread_ts 如果存在，否則使用 ts
+          const postId = event.ts; // 使用 thread_ts 如果存在，否則使用 ts
   
           // 檢查貼文是否已觸發過功能
           if (triggeredPosts[postId]) {
@@ -393,11 +393,11 @@ function serverSetting() {
   
   
       // 每5分鐘執行一次 'node ./src/index.js'
-      schedule.scheduleJob('*/5 * * * *', function () {
+      schedule.scheduleJob('*/15 * * * *', function () {
           console.log('Running epic bot...');
           // 執行 'node ./src/index.js' 命令
           const { exec } = require('child_process');
-          const options = { maxBuffer: 100 * 1024 * 1024 }; // 設定緩衝區大小上限為 100 MB
+          const options = { maxBuffer: 1000 * 1024 * 1024 }; // 設定緩衝區大小上限為 100 MB
           exec('node ./src/index.js', options,  (error, stdout, stderr) => {
           if (error) {
               console.error(`bot failed: ${error}`);

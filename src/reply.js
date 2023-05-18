@@ -46,7 +46,7 @@ function botReply() {
     // need app_mentions:read and chat:write scopes
     app.event('app_mention', async ({ event, context, client, say }) => {
       try {
-        const postId = event.thread_ts || event.ts; // 使用 thread_ts 如果存在，否則使用 ts
+        const postId = event.ts; // 使用 thread_ts 如果存在，否則使用 ts
 
         // 檢查貼文是否已觸發過功能
         if (triggeredPosts[postId]) {
