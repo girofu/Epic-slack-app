@@ -393,7 +393,7 @@ function serverSetting() {
   
   
       // 每5分鐘執行一次 'node ./src/index.js'
-      schedule.scheduleJob('*/15 * * * *', function () {
+      schedule.scheduleJob('*/1440 * * * *', function () {
           console.log('Running epic bot...');
           // 執行 'node ./src/index.js' 命令
           const { exec } = require('child_process');
