@@ -1,28 +1,8 @@
-
-var Promise = require("bluebird");
 var redis = require("redis");
+var Promise = require("bluebird");
+var fs = require('fs');
 
 require("dotenv").config();
-
-
-// 從環境變量獲取Redis的設定並建立連接
-// Promise.promisifyAll(redis);
-
-// const client = redis.createClient(
-//    process.env.REDISPORT,
-//    process.env.REDISHOSTNAME,
-//    {
-//       password: process.env.REDISKEY,
-//       tls: { servername: process.env.REDISHOSTNAME }
-//    }
-// );
-
-// const client = redis.createClient({
-//     port: process.env.REDISPORT,
-//     host: process.env.REDISHOSTNAME,
-//     password: process.env.REDISKEY,
-//     tls: { servername: process.env.REDISHOSTNAME }
-//  });
 
 
 // 检查环境变量是否为空
@@ -49,65 +29,52 @@ client.on("error", function(error) {
     console.error("Error: ", error.message);
 });
 
+// 讀取 JSON 文件
+function loadFiles() {
+    fs.readFile('userListWithEpic.json', 'utf8', function (err, data) {
+        if (err) throw err;
+        var obj = JSON.parse(data);
 
-// // 你的JSON資料
-// const data = [
-//     {"id":"USLACKBOT","name":"slackbot","real_name":"Slackbot"},
-//     {"id":"U02G2SXKR","name":"yhsiang","real_name":"yhsiang"},
-//     {"id":"U02G2US2Z","name":"clkao","real_name":"clkao"},
-//     {"id":"U02G30WJT","name":"gugod","real_name":"gugod"}
-// ];
+        // 將資料存入 Redis
+        // for (let item of obj) {
+        //     let id = item['id'];
+        //     for (let key in item) {
+        //         let value = item[key];
+        //         console.log(`Saving ${id}, ${key}, ${value} to Redis`);
+        //         client.setAsync(id, key, value);
+        //     }
+        // }
+        for (let item of obj) {
+            let id = item['id'];
+            console.log(`Saving ${id} to Redis`);
+            client.set(id, JSON.stringify(item));
+        }
 
-// // 將資料存入Redis
-// for (let item of data) {
-//     let id = item['id'];
-//     for (let key in item) {
-//         let value = item[key];
-//         client.hsetAsync(id, key, value);
-//     }
-// }
+        // 存入完成的提示
+        console.log("Data saved to Redis");
 
-// // 讀取Redis中的資料
-// (async () => {
-//     for (let item of data) {
-//         let id = item['id'];
-//         let result = await client.hgetallAsync(id);
-//         console.log(result);
-//     }
-// })();
+        // 讀取其中一筆資料
+        (async () => {
+            // 開始讀取
+            console.log("Reading U04FCLTTECE from Redis");
+            let result = await client.get("U04FCLTTECE");
+            console.log(JSON.parse(result));
+            // console.log(result);
+        })();
 
-// (async () => {
-//     console.log("Adding value to the cache");
-//     await client.setAsync("myKey", "myValue");
-//     console.log("Reading value back:");
-//     console.log(await client.getAsync("myKey"));
-//     console.log("Pinging the cache");
-//     console.log(await client.pingAsync());
-//     await client.flushdbAsync();
-//     await client.quitAsync();
-//   })();
+        console.log("Before the async call");
 
-// client.on("error", function(error) {
-//     console.error("Error: ", error);
-// });
-
-// async function testClient() {
-//     try {
-//         console.log("Adding value to the cache");
-//         await client.setAsync("myKey", "myValue");
-//         console.log("Reading value back:");
-//         console.log(await client.getAsync("myKey"));
-//         console.log("Pinging the cache");
-//         console.log(await client.pingAsync());
-//         await client.flushdbAsync();
-//     } catch (error) {
-//         console.error("Error: ", error);
-//     }
-//      finally {
-//         console.log("Closing the client");
-//         await client.quitAsync();
-//     }
-// };
+        // // 讀取 Redis 中的資料
+        // (async () => {
+        //     for (let item of obj) {
+        //         let id = item['id'];
+        //         console.log(`Reading ${id} from Redis`);
+        //         let result = await client.get(id);
+        //         console.log(result);
+        //     }
+        // })();
+    });
+}
 
 async function testClient() {
     // Connect to Redis，**critical step that is not shown on the tutorial
@@ -131,6 +98,7 @@ async function testClient() {
 };
 
 testClient();
+loadFiles();
 
 console.log("REDISPORT: ", process.env.REDISPORT);
 console.log("REDISHOSTNAME: ", process.env.REDISHOSTNAME);
