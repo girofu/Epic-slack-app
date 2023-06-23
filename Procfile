@@ -1,1 +1,1 @@
-web: node ./src/redisApi.js
+web: node ./src/index.js

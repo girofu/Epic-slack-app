@@ -74,7 +74,7 @@ let userList = [];
 let currentGifUrl;
 let shoutoutedUserId = [];
 
-async function botReply() {
+module.exports.botReply = async function botReply() {
     // 儲存已觸發功能的貼文 ID
     // const triggeredPosts = {};
     // redisclient.connect();
@@ -496,4 +496,4 @@ async function test() {
     }
 }
 
-botReply();
+// botReply();

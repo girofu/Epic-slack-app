@@ -31,7 +31,7 @@ client.on("error", function(error) {
 client.connect();
 
 
-function api() {
+module.exports.api = function api() {
     appForUser.get('/api/json/users/by-id/:id/epic002', async (req, res) => {
         try {
         res.set('Access-Control-Allow-Origin', '*');
@@ -63,7 +63,7 @@ function api() {
     }
         
     appForUser.listen(port, () => {
-        console.log('Server is running on http://localhost:8000');
+        console.log('Server API is running on http://localhost:8000');
     });
 }
 
@@ -87,5 +87,5 @@ async function testClient() {
     // }
 };
 
-api();
+// api();
 // testClient();
