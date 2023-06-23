@@ -1,18 +1,6 @@
-constants.js
 .env
 node_modules/
 backup20230304/
 backup20230402/
 backup20230515/
-Instagram-post-7.png
-googleSheet.js
-getUserAddress.js
-
-
-# userList.json
-# userSelectedConversationObject.json
-# userAddressAndId.json
-# userListWithRawEpic.json
-# userListWithEpic.json
-# userSelectedConversationObject002.json
-# tsSelectedJson.json
+backup20230406/
