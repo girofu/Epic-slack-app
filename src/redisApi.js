@@ -30,8 +30,7 @@ client.on("error", function(error) {
 
 client.connect();
 
-
-module.exports.api = function api() {
+module.exports.api = async function api() {
     appForUser.get('/api/json/users/by-id/:id/epic002', async (req, res) => {
         try {
         res.set('Access-Control-Allow-Origin', '*');
@@ -86,6 +85,8 @@ async function testClient() {
     //     await client.quitAsync();
     // }
 };
+
+
 
 // api();
 // testClient();
