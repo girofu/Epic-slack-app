@@ -8,6 +8,8 @@ const fs = require('fs');
 const http = require('http');
 var redis = require("redis");
 var Promise = require("bluebird");
+var logfmt = require("logfmt");
+var url = require('url');
 
 
 require("dotenv").config();
@@ -18,8 +20,10 @@ if (!process.env.REDISCLOUD_URL) {
     throw new Error("Environment variables for Redis are not set correctly");
 }
 
-// 從環境變量獲取Redis的設定並建立連接
-var redisclient = redis.createClient(process.env.REDISCLOUD_URL, {no_ready_check: true});
+// Parse the Redis URL from environment variables
+var redisURL = url.parse(process.env.REDISCLOUD_URL);
+// Create a new Redis client
+var redisclient = redis.createClient(redisURL.port, redisURL.hostname, {no_ready_check: true});
  
 Promise.promisifyAll(redisclient); // 在 redis 客戶端對象上使用 promisifyAll
 

@@ -1,36 +1,45 @@
 
 // dotenv.config()
 var redis = require("redis");
-var Promise = require("bluebird");
 const express = require('express');
-const fs = require('fs');
-const appForUser = express();
+var Promise = require('bluebird'); // add this
 var logfmt = require("logfmt");
 var url = require('url');
 require('dotenv').config();
 
-// 检查环境变量是否为空
-if (!process.env.REDISCLOUD_URL) {
-    throw new Error("Environment variables for Redis are not set correctly");
-}
 
-// 從環境變量獲取Redis的設定並建立連接
-var client = redis.createClient(process.env.REDISCLOUD_URL, {no_ready_check: true});
- 
+// Parse the Redis URL from environment variables
+var redisURL = url.parse(process.env.REDISCLOUD_URL);
+// Create a new Redis client
+var client = redis.createClient(redisURL.port, redisURL.hostname, {no_ready_check: true});
 
-Promise.promisifyAll(client); // 在 redis 客戶端對象上使用 promisifyAll
-
-
+// promisify redis client
+Promise.promisifyAll(client);
 
 client.on('connect', function() {
     console.log('connected to Redis');
 });
 
-client.on("error", function(error) {
-    console.error("Error: ", error.message);
-});
-
 client.connect();
+
+// Authenticate with the Redis server
+// Authenticate with the Redis server
+// if (redisURL.auth) {
+//     var authParts = redisURL.auth.split(":");
+//     if (authParts.length > 1) {
+//       client.auth(authParts[1]);
+//     }
+//   }
+  
+
+const appForUser = express();
+
+// Set up the view engine
+appForUser.engine('html', require('ejs').renderFile);
+
+appForUser.get('/', function(req, res) {
+  res.render('index.html');
+});
 
 module.exports.api = async function api() {
     appForUser.get('/api/json/users/by-id/:id/epic002', async (req, res) => {
@@ -58,13 +67,9 @@ module.exports.api = async function api() {
     //     console.log('⚡️ api app started');
     // })();
 
-    let port = process.env.PORT;
-    if (port == null || port == "") {
-        port = 8000;
-    }
-        
-    appForUser.listen(port, () => {
-        console.log('Server API is running on http://localhost:8000');
+    var port = Number(process.env.PORT || 8000);
+    appForUser.listen(port, function() {
+      console.log("Listening on " + port);
     });
 }
 
