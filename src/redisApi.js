@@ -5,6 +5,8 @@ var Promise = require("bluebird");
 const express = require('express');
 const fs = require('fs');
 const appForUser = express();
+var logfmt = require("logfmt");
+var url = require('url');
 require('dotenv').config();
 
 // 检查环境变量是否为空
