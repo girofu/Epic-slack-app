@@ -1,7 +1,7 @@
 require('dotenv').config();
 const api = require("./redisApi");
-const botReply = require("./selectAndReply");
+// const botReply = require("./selectAndReply");
 
 
 api.api();
-botReply.botReply();
+// botReply.botReply();
