@@ -23,7 +23,9 @@ if (!process.env.REDISCLOUD_URL) {
 // Parse the Redis URL from environment variables
 var redisURL = url.parse(process.env.REDISCLOUD_URL);
 // Create a new Redis client
-var redisclient = redis.createClient(redisURL.port, redisURL.hostname, {no_ready_check: true});
+var redisclient = redis.createClient({
+    url: process.env.REDISCLOUD_URL
+});
  
 Promise.promisifyAll(redisclient); // 在 redis 客戶端對象上使用 promisifyAll
 
@@ -501,3 +503,4 @@ async function test() {
 }
 
 // botReply();
+userListSetting();

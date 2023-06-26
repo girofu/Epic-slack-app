@@ -11,7 +11,9 @@ require('dotenv').config();
 // Parse the Redis URL from environment variables
 var redisURL = url.parse(process.env.REDISCLOUD_URL);
 // Create a new Redis client
-var client = redis.createClient(redisURL.port, redisURL.hostname, {no_ready_check: true});
+var client = redis.createClient({
+    url: process.env.REDISCLOUD_URL
+});
 
 // promisify redis client
 Promise.promisifyAll(client);
