@@ -1,4 +1,5 @@
 const redis = require('redis');
+const fs = require("fs");
 var Promise = require('bluebird'); // add this
 require('dotenv').config();
 
@@ -65,5 +66,53 @@ function scanAndCopyKeys() {
   });
 }
 
-scanAndCopyKeys();
+// 讀取 JSON 文件
+function loadFiles() {
+    fs.readFile('/Users/fuchangwei/Projects/Slack-app/epic-slack-app-g0v-001/backup20230627/userListWithEpic.json', 'utf8', function (err, data) {
+        if (err) throw err;
+        var obj = JSON.parse(data);
+
+        // 將資料存入 Redis
+        // for (let item of obj) {
+        //     let id = item['id'];
+        //     for (let key in item) {
+        //         let value = item[key];
+        //         console.log(`Saving ${id}, ${key}, ${value} to Redis`);
+        //         client.setAsync(id, key, value);
+        //     }
+        // }
+        for (let item of obj) {
+            let id = item['id'];
+            console.log(`Saving ${id} to Redis`);
+            targetClient.set(id, JSON.stringify(item));
+        }
+
+        // 存入完成的提示
+        console.log("Data saved to Redis");
+
+        // 讀取其中一筆資料
+        (async () => {
+            // 開始讀取
+            console.log("Reading U04FCLTTECE from Redis");
+            let result = await targetClient.get("U04FCLTTECE");
+            console.log(JSON.parse(result));
+            // console.log(result);
+        })();
+
+        console.log("Before the async call");
+
+        // // 讀取 Redis 中的資料
+        // (async () => {
+        //     for (let item of obj) {
+        //         let id = item['id'];
+        //         console.log(`Reading ${id} from Redis`);
+        //         let result = await client.get(id);
+        //         console.log(result);
+        //     }
+        // })();
+    });
+}
+
+loadFiles();
+// scanAndCopyKeys();
   

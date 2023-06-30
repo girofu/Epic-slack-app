@@ -21,7 +21,7 @@ if (!process.env.REDISCLOUD_URL) {
 }
 
 // Parse the Redis URL from environment variables
-var redisURL = url.parse(process.env.REDISCLOUD_URL);
+// var redisURL = url.parse(process.env.REDISCLOUD_URL);
 // Create a new Redis client
 var redisclient = redis.createClient({
     url: process.env.REDISCLOUD_URL
@@ -79,6 +79,7 @@ var channelListIdName =[];
 let userList = [];
 let currentGifUrl;
 let shoutoutedUserId = [];
+let newEvent;
 
 module.exports.botReply = async function botReply() {
     // 儲存已觸發功能的貼文 ID
@@ -192,62 +193,14 @@ module.exports.botReply = async function botReply() {
                 //     }
                 // }); 
                 
-                await userListSetting();
+                // await userListSetting();
                 // add this new element without triggering selection() to the 'epic002' array
-                let newEvent = await modifyShoutOut(event, userList);
-                console.log(newEvent);
-                // console.log(allSOJson);
-                await allSOObj.epic002.push({
-                    text: `${newEvent.text}`,
-                    user: `${newEvent.user}`,
-                    ts: `${event.ts}`,
-                    channel: `${newEvent.channel}`,
-                    // permalink: `${permalink.permalink}`,
-                });
+                newEvent = await modifyShoutOut(event, userList);
+                // console.log(newEvent);
 
-                // Convert the updated object back into a JSON string
-                let updatedSO = JSON.stringify(allSOObj);
+                await updateDatabase(event, newEvent, allSOObj);
 
-                // Store the updated JSON string back in Redis
-                await redisclient.set("U04FCLTTECE", updatedSO);
-                console.log("SOB shoutout updated!");
-
-                for (shoutoutedUser of shoutoutedUserId) {
-                    console.log(shoutoutedUser)
-                    var userSO = await redisclient.get(shoutoutedUser);
-                    console.log(userSO);
-                    userSOObj = JSON.parse(userSO);
-                    console.log(userSOObj);
-
-                    if ("epic002" in userSOObj) {
-                        // push messageText into userId, or add a new useId into userSelectedConversation
-                        await userSOObj.epic002.push({
-                            text: `${newEvent.text}`,
-                            user: `${newEvent.user}`,
-                            ts: `${event.ts}`,
-                            channel: `${newEvent.channel}`,
-                            // permalink: `${permalink.permalink}`,
-                        });
-                        // console.log(newObject)
-                        let updateduserSO = JSON.stringify(userSOObj);
-                        await redisclient.set(shoutoutedUser, updateduserSO);
-                    } else {
-                        userSOObj["epic002"] = [];
-                        await userSOObj.epic002.push({
-                            text: `${newEvent.text}`,
-                            user: `${newEvent.user}`,
-                            ts: `${event.ts}`,
-                            channel: `${newEvent.channel}`,
-                            // permalink: `${permalink.permalink}`,
-                        });
-                        // console.log(newObject)
-                        let updateduserSO = JSON.stringify(userSOObj);
-                        await redisclient.set(shoutoutedUser, updateduserSO);
-                    };
-                }
-                console.log("user shoutout updated!")
             }
-
             }
         }
         catch (error) {
@@ -346,26 +299,42 @@ async function getChannelName() {
 async function userListSetting() {
     // execute the function to get user list before setting user list
     await getUserList();
-    // console.log(userList);
+    console.log(userList);
     // redisclient.connect();
 
     try {
         let idInList = {};
 
+        var userListWithSO = await redisclient.keys("*");
+        console.log(userListWithSO);
         for (let user of userList){
             idInList = user["id"];
-            let reply = await redisclient.get(idInList);
-            // console.log("get user from redis");
-            if (reply) {
-                // console.log("user is in redis");
-                // console.log(reply);
+            console.log("get user from redis");
+            console.log(idInList);
+            if (userListWithSO.includes(idInList)) {
+                console.log("user is in redis");
                 continue;
             } else {
-                // console.log("user is not in redis");
+                console.log("user is not in redis");
                 await redisclient.set(idInList, JSON.stringify(user));
-                // console.log("user is now in redis");
+                console.log("user is now in redis");
             }
         }
+
+        // for (let user of userList){
+        //     idInList = user["id"];
+        //     let reply = await redisclient.get(idInList);
+        //     console.log("get user from redis");
+        //     if (reply) {
+        //         console.log("user is in redis");
+        //         console.log(reply);
+        //         continue;
+        //     } else {
+        //         console.log("user is not in redis");
+        //         await redisclient.set(idInList, JSON.stringify(user));
+        //         console.log("user is now in redis");
+        //     }
+        // }
     } catch (error) {
         console.error("Error in userListSetting: ", error);
     }
@@ -394,8 +363,10 @@ async function fetchCatGif() {
 }
 
 async function modifyShoutOut(data, userList) {
+    await userListSetting();
+    
     let modifiedShoutOuts;
-    // console.log(data.text); // data checked 
+    console.log(data.text); // data checked 
     // console.log(userListWithSO); // checked
     // redisclient.connect();
     // var userListWithSO = await redisclient.keys("*");
@@ -494,7 +465,7 @@ async function test() {
     // console.log(allSO);
     // allSO 是代表 SOB 的所有內容
     var userListWithSO = await redisclient.keys("*"); // checked
-    // console.log(userListWithSO);
+    console.log(userListWithSO);
     allSOObj = JSON.parse(allSO);
     // console.log(allSOObj);
     for (SO of allSOObj.epic002) {
@@ -502,5 +473,59 @@ async function test() {
     }
 }
 
+async function updateDatabase(event, newEvent, allSOObj) {
+                    // console.log(allSOJson);
+                    await allSOObj.epic002.push({
+                        text: `${newEvent.text}`,
+                        user: `${newEvent.user}`,
+                        ts: `${event.ts}`,
+                        channel: `${newEvent.channel}`,
+                        // permalink: `${permalink.permalink}`,
+                    });
+    
+                    // Convert the updated object back into a JSON string
+                    let updatedSO = JSON.stringify(allSOObj);
+    
+                    // Store the updated JSON string back in Redis
+                    await redisclient.set("U04FCLTTECE", updatedSO);
+                    console.log("SOB shoutout updated!");
+    
+                    for (shoutoutedUser of shoutoutedUserId) {
+                        console.log(shoutoutedUser)
+                        var userSO = await redisclient.get(shoutoutedUser);
+                        console.log(userSO);
+                        userSOObj = JSON.parse(userSO);
+                        console.log(userSOObj);
+    
+                        if ("epic002" in userSOObj) {
+                            // push messageText into userId, or add a new useId into userSelectedConversation
+                            await userSOObj.epic002.push({
+                                text: `${newEvent.text}`,
+                                user: `${newEvent.user}`,
+                                ts: `${event.ts}`,
+                                channel: `${newEvent.channel}`,
+                                // permalink: `${permalink.permalink}`,
+                            });
+                            // console.log(newObject)
+                            let updateduserSO = JSON.stringify(userSOObj);
+                            await redisclient.set(shoutoutedUser, updateduserSO);
+                        } else {
+                            userSOObj["epic002"] = [];
+                            await userSOObj.epic002.push({
+                                text: `${newEvent.text}`,
+                                user: `${newEvent.user}`,
+                                ts: `${event.ts}`,
+                                channel: `${newEvent.channel}`,
+                                // permalink: `${permalink.permalink}`,
+                            });
+                            // console.log(newObject)
+                            let updateduserSO = JSON.stringify(userSOObj);
+                            await redisclient.set(shoutoutedUser, updateduserSO);
+                        };
+                    }
+                    console.log("user shoutout updated!")
+}
+
 // botReply();
-userListSetting();
+// userListSetting();
+// test();
