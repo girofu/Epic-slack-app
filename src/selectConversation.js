@@ -24,6 +24,7 @@ const app = new App({
   signingSecret: process.env.SLACK_SIGNING_SECRET,
 });
 
+
 // All the room in the world for your code
 // Require the Node Slack SDK package (github.com/slackapi/node-slack-sdk)
 const { WebClient, LogLevel } = require("@slack/web-api");
