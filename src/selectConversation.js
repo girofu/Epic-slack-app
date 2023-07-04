@@ -49,7 +49,7 @@ var emojiFilter = [];
 
 const retrieveingTime = new Date();
 const retrieveingTimeStamp = retrieveingTime.getTime()/1000;
-const retrieveingTimeStampStartDay = retrieveingTimeStamp - 86400;
+const retrieveingTimeStampStartDay = retrieveingTimeStamp - 604800;
 
 // conversation selected was record by ts in this array
 // let tsSelected = [];
