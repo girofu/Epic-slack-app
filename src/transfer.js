@@ -68,7 +68,7 @@ function scanAndCopyKeys() {
 
 // 讀取 JSON 文件
 function loadFiles() {
-    fs.readFile('/Users/fuchangwei/Projects/Slack-app/epic-slack-app-g0v-001/backup20230627/userListWithEpic-1.json', 'utf8', function (err, data) {
+    fs.readFile('/Users/fuchangwei/Projects/Slack-app/epic-slack-app-g0v-001/backup20230705/userListWithEpic.json', 'utf8', function (err, data) {
         if (err) throw err;
         var obj = JSON.parse(data);
 
